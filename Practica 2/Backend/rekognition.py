@@ -25,17 +25,15 @@ def detect_similitud(image1_url, image2_data):
             print("Error al descargar la imagen de la URL")
             return None
 
-        # Convertir la imagen descargada a un objeto Image de PIL
         image1 = Image.open(BytesIO(response.content))
 
-        # Convertir los datos binarios de la imagen de React a un objeto Image de PIL
+
         image2 = Image.open(BytesIO(image2_data))
 
-        # Convertir la imagen RGBA a RGB si es necesario
+
         if image2.mode == 'RGBA':
             image2 = image2.convert('RGB')
 
-        # Guardar las imágenes en BytesIO para poder pasarlas a Rekognition
         image1_bytes = BytesIO()
         image1.save(image1_bytes, format='JPEG')
         image1_bytes.seek(0)
@@ -67,16 +65,8 @@ def detect_tags(image):
             print("Error al descargar la imagen de la URL")
             return None
 
-        # Convertir la imagen descargada a un objeto Image de PIL
         image1 = Image.open(BytesIO(response.content))
 
-        # Convertir los datos binarios de la imagen de React a un objeto Image de PIL
-      
-
-        # Convertir la imagen RGBA a RGB si es necesario
-      
-
-        # Guardar las imágenes en BytesIO para poder pasarlas a Rekognition
         image1_bytes = BytesIO()
         image1.save(image1_bytes, format='JPEG')
         image1_bytes.seek(0)
