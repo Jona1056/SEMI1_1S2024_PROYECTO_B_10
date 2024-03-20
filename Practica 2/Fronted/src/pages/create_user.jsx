@@ -39,7 +39,7 @@ export const Login_create = () => {
     formData.append('image', image);
     
     try {                               
-      const response = await axios.post('http://balanceaorprac1-1947984842.us-east-1.elb.amazonaws.com/CreateUser', formData, {
+      const response = await axios.post('http://192.168.1.49:8081/CreateUser', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

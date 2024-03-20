@@ -10,11 +10,17 @@ export const LoginForm = () => {
   const [password, setPassword] = useState("");
   const navigateTo = useNavigate();
 
+  const handleIngresarPorCamara = () => {
+    // Llama a la función o método que deseas ejecutar aquí
+    // Por ejemplo:
+    navigateTo("/loginwithcamara");
+};
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://balanceaorprac1-1947984842.us-east-1.elb.amazonaws.com/login", {
+      const response = await fetch("http://192.168.1.49:8081/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -77,6 +83,9 @@ export const LoginForm = () => {
               Ingresar
             </Button>
 
+            <Button variant="success" className="login-button" onClick={handleIngresarPorCamara}>
+                Ingresar por cámara
+            </Button>
             <Form.Text className="text-muted">
               ¿No tienes una cuenta? <a href="/create_user">Crea una aquí</a>.
             </Form.Text>

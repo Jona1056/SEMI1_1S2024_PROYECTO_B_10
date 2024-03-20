@@ -31,6 +31,7 @@
   
   .form-container {
     margin-left: 20px; /* Espacio entre la imagen y el formulario */
+    margin-right: 20px;
   }
   
   .edit-image-button {

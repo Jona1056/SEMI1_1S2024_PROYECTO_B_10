@@ -96,6 +96,8 @@ export const Images = () => {
 
   return (
     <div className="home-container2">
+
+      
       <div className="user-info">
         <img src={`${url}`} alt="Imagen de perfil" className="user-image" />
         <div>
@@ -103,6 +105,7 @@ export const Images = () => {
           <p>Nombre: {user.name}</p>
         </div>
       </div>
+      
       <div className="buttons-container">
         <button
           className="button_back"
@@ -125,7 +128,9 @@ export const Images = () => {
         >
           Perfil
         </button>
+        
       </div>
+      
       <p className="title">Fotos de Perfil</p>
       <div className="carousel-container">
         <div className="carousel">

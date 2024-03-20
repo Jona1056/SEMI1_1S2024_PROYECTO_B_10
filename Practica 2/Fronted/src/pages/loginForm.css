@@ -6,6 +6,9 @@ body {
   background: linear-gradient(to right, #ffffff, #87ceeb);
 }
 
+.camara{
+  margin-top:10px;
+}
 .login-box {
   background: linear-gradient(to bottom, #ffffff, #87ceeb);
   margin-left: auto;

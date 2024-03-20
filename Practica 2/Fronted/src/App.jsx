@@ -7,6 +7,7 @@ import {Edit} from './pages/edit_profile';
 import {UploadPhoto} from './pages/upload_photo';
 import {Images} from './pages/images';
 import {EditAlbum} from './pages/edit_album';
+import { LoginForm_camara } from "./pages/login_camara";
 function App() {
   return (
     <>
@@ -19,6 +20,7 @@ function App() {
         <Route path="/UploadPhoto" element={<UploadPhoto/>} /> {/* Ruta para subir foto */}
         <Route path="/Images" element={<Images/>} /> {/* Ruta para ver fotos */}
         <Route path="/EditAlbum" element={<EditAlbum/>} /> {/* Ruta para editar album */}
+        <Route path="loginwithcamara" element={<LoginForm_camara />} /> {/* Ruta para el inicio de sesión con camara */}
     </Routes>
     </>
   );

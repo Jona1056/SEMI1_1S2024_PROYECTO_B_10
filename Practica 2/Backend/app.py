@@ -3,8 +3,15 @@ from flask_cors import CORS
 from db import query
 from encripty import hash_password
 from s3 import SubirS3
-import os
+from s3 import traerImagen
+from rekognition import detect_similitud
+from rekognition import detect_tags
+import requests
+from io import BytesIO
+from PIL import Image
 
+import os
+url_bucket = "https://practica1b-g12-imagenes.s3.amazonaws.com/Fotos_Perfil/"
 app = Flask(__name__)
 CORS(app)
 
@@ -50,8 +57,7 @@ def api_create_user():
 def api_login():
     user = request.json.get('username')
     password = request.json.get('password')
-
-
+    
     results,_ = query("SELECT * FROM Usuario WHERE usuario = %s", (user,))
 
     if len(results) == 0:
@@ -75,7 +81,49 @@ def api_login():
                 "name":datos_personales[2],
                 "image":results[0][0]
             }}), 200
+    
+@app.route('/login_camara', methods=['POST'])   
+def api_login_camara():
+    user = request.form['username']
+    image = request.files['image']
+    results, _ = query("SELECT * FROM Usuario WHERE usuario = %s", (user,))
+    if len(results) == 0:
+        return jsonify({'mensaje': "El Usuario No Existe"}), 404
 
+    datos_personales = results[0]
+    results, _ = query("SELECT foto FROM FotoPerfil WHERE usuario_id = %s ORDER BY id DESC LIMIT 1", (datos_personales[0],))
+    imagen_s3 = results[0][0]
+    imagen_url = url_bucket + imagen_s3
+    image_data = image.read()
+    rekog = detect_similitud(imagen_url, image_data)
+    if (rekog == False):
+         return jsonify({
+        "mensaje": "No se puedo comparar las imagenes",
+       }), 305
+         
+    result = rekog.get('FaceMatches')
+    if (result == None or len(result) == 0):
+        return jsonify({
+        "mensaje": "No se encontro ninguna coincidencia",
+       }), 306    
+        
+    result = result[0]
+    result = result["Similarity"]
+    print(result)
+    if(result < 95):
+        return jsonify({
+        "mensaje": "No se encontro coincidencia en las imagenes", 
+       }), 306
+    tags = detect_tags(imagen_url)
+    print(tags)
+    return jsonify({
+        "mensaje": "Usuario autenticado",
+        "user": {
+            "username": datos_personales[1],
+            "name": datos_personales[2],
+            "image": imagen_s3
+        }}), 200
+    
 @app.route('/EditUser', methods=['POST'])
 def api_edit_user():
     global Newimages , boolImage
