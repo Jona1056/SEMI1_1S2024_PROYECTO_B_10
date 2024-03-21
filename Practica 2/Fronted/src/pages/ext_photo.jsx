@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import "./ext_photo.css"; // Importar el archivo de estilos CSS
+import "./css/ext_photo.css"; // Importar el archivo de estilos CSS
 import axios from "axios";
 import Swal from "sweetalert2";
 

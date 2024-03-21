@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import "./images"; // Importar el archivo de estilos CSS
+import "./css/Images.css"; // Importar el archivo de estilos CSS
 import axios from "axios";
 import Swal from "sweetalert2";
 export const EditAlbum = () => {

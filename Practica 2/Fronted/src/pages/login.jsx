@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
-import "./loginForm.css";
+import "./css/loginForm.css";
 import Swal from "sweetalert2";
 import { useNavigate } from 'react-router-dom';
-
 
 export const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -18,7 +17,7 @@ export const LoginForm = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+   
     try {
       const response = await fetch("http://192.168.1.49:8081/login", {
         method: "POST",
@@ -35,6 +34,7 @@ export const LoginForm = () => {
         console.log(user)
 
         navigateTo("/Home", { state: { user: user } });
+        window.isLoggedIn = true;
         //borrar valores en los campos
         setUsername("");
         setPassword("");

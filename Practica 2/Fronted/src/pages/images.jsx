@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import "./Images.css"; // Importa tu archivo CSS
+import "./css/Images.css"; // Importa tu archivo CSS
 import { useNavigate } from 'react-router-dom';
 
 export const Images = () => {

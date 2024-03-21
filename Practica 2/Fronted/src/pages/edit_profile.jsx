@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./edit.css";
+import "./css/edit.css";
 import Swal from "sweetalert2";
 import axios from "axios";
 

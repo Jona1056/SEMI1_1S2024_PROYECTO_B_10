@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import "./Home.css"; // Importa tu archivo CSS
+import "./css/Home.css"; // Importa tu archivo CSS
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 export const Home = () => {

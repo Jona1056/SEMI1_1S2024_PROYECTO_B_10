@@ -3,7 +3,7 @@ import { Form, Button } from 'react-bootstrap';
 import { Container, Card } from 'semantic-ui-react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import './loginForm.css';
+import './css/loginForm.css';
 import { useNavigate } from 'react-router-dom';
 export const LoginForm_camara = () => {
     const videoDiv = useRef();

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import "./upload_photo.css"; // Importar el archivo de estilos CSS
+import "./css/upload_photo.css"; // Importar el archivo de estilos CSS
 import axios from "axios";
 import Swal from "sweetalert2";
 export const UploadPhoto = () => {
