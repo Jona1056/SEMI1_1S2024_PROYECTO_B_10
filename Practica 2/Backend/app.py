@@ -4,8 +4,8 @@ from db import query
 from encripty import hash_password
 from s3 import SubirS3
 from s3 import traerImagen
-from rekognition import detect_similitud
-from rekognition import detect_tags
+from rekognition import detect_similitud, detect_faces,detect_text
+
 import requests
 from io import BytesIO
 from PIL import Image
@@ -114,7 +114,7 @@ def api_login_camara():
         return jsonify({
         "mensaje": "No se encontro coincidencia en las imagenes", 
        }), 306
-    tags = detect_tags(imagen_url)
+    tags = detect_faces(imagen_url)
     print(tags)
     return jsonify({
         "mensaje": "Usuario autenticado",
@@ -123,6 +123,93 @@ def api_login_camara():
             "name": datos_personales[2],
             "image": imagen_s3
         }}), 200
+    
+@app.route('/GetTags', methods=['POST'])
+def get_tags_perfil():
+    image = request.json.get('url')
+    datos  = []
+    tags = detect_faces(image)
+    face_detalles = tags["FaceDetails"][0]
+
+    age_range = face_detalles["AgeRange"]
+    age_range = f"{age_range['Low']} - {age_range['High']} Años"
+    Gender = face_detalles["Gender"]
+
+    if Gender["Value"] == "Male":
+        Gender = "Hombre";
+    else:
+        Gender = "Mujer";
+    datos.append(Gender)
+    datos.append(age_range)
+    print(face_detalles["Smile"]["Value"])
+    if face_detalles["Smile"]["Value"] == False:
+        print("no sonriendo")
+    else:
+        datos.append("Sonriendo")
+        
+    if face_detalles["Eyeglasses"]["Value"]== False:
+        print("no tiene lentes")
+    else:
+        datos.append("Tiene lentes")
+
+        
+    if face_detalles["Beard"]["Value"]== False:
+        print("no tiene barba")
+    else:
+        datos.append("Tiene barba")
+        
+    if face_detalles["Mustache"]["Value"]== False:
+        print("no tiene mustache")
+    else:
+        datos.append("Tiene mustacho")
+        
+    print(face_detalles["Emotions"][0])
+
+    if(face_detalles["Emotions"][0]["Type"] == "CALM"):
+        datos.append("Calmado")
+    elif(face_detalles["Emotions"][0]["Type"] == "HAPPY"):
+        datos.append("Feliz")
+    elif(face_detalles["Emotions"][0]["Type"] == "SAD"):
+        datos.append("Triste")
+    elif(face_detalles["Emotions"][0]["Type"] == "ANGRY"):
+        datos.append("Enojado")
+    elif(face_detalles["Emotions"][0]["Type"] == "DISGUSTED"):
+        datos.append("Disgustado")
+    elif(face_detalles["Emotions"][0]["Type"] == "SURPRISED"):
+        datos.append("Sorprendido")
+    elif(face_detalles["Emotions"][0]["Type"] == "CONFUSED"):
+        datos.append("Confundido")
+    elif(face_detalles["Emotions"][0]["Type"] == "FEAR"):
+        datos.append("Asustado")
+        
+  
+    return jsonify({
+        "mensaje": "Usuario autenticado",
+        "user": {
+            "tags": datos
+        }}), 200
+    
+@app.route('/GetText', methods=['POST'])
+def api_get_text():
+    if 'image' not in request.files:
+            return {'message': 'No se encontró ninguna imagen en la solicitud'}, 400
+    
+    image = request.files['image']	
+    image_data = image.read()
+    de_text = detect_text(image_data)
+
+    detected_texts = []  # Usar una lista para mantener el orden
+
+    for text_detection in de_text['TextDetections']:
+        if text_detection['Type'] == 'LINE':
+            detected_texts.append(text_detection['DetectedText'])
+
+# Ahora, 'detected_texts' contendrá solo los textos detectados donde el Type sea "LINE", en el orden en que se detectaron
+    print(detected_texts)
+
+    return jsonify({
+        "mensaje": detected_texts
+     }), 200
     
 @app.route('/EditUser', methods=['POST'])
 def api_edit_user():

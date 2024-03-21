@@ -237,19 +237,23 @@ export const EditAlbum = () => {
                 </option>
               ))}
             </select>
-            <button type="button" onClick={addAlbums}>
+            
+            <button className="button-1" type="button" onClick={addAlbums}>
               Agregar Album
             </button>
-          </div>
-
-          <button type="button" onClick={editAlbums}>
+            <button className="button-1" type="button" onClick={editAlbums}>
             Editar Album
           </button>
-          <button type="button" onClick={deleteAlbums}>
+          <button className="button-1" type="button" onClick={deleteAlbums}>
             Eliminar Album
           </button>
+          </div>
+
+        
         </form>
+        
       </div>
+      
     </div>
   );
 };

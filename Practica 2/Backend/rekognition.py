@@ -58,7 +58,7 @@ def detect_similitud(image1_url, image2_data):
         print("Error al comparar caras:", e)
         return False
     
-def detect_tags(image):
+def detect_faces(image):
     try:
         response = requests.get(image)
         if response.status_code != 200:
@@ -86,3 +86,28 @@ def detect_tags(image):
     except Exception as e:
         print("Error al comparar caras:", e)
         return False
+    
+def detect_text( image2_data):
+    try:
+        image2 = Image.open(BytesIO(image2_data))
+        if image2.mode == 'RGBA':
+            image2 = image2.convert('RGB')
+
+        image2_bytes = BytesIO()
+        image2.save(image2_bytes, format='JPEG')
+        image2_bytes.seek(0)
+        response = rekognition.detect_text(
+            Image={
+                'Bytes': image2_bytes.read()
+            }
+            
+        )
+        
+        
+        # Comparar las caras en las imágenes
+        return response
+
+    except Exception as e:
+        print("Error al comparar caras:", e)
+        return False
+    

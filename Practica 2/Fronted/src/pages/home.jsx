@@ -1,16 +1,51 @@
 import { useLocation } from "react-router-dom";
 import "./Home.css"; // Importa tu archivo CSS
 import { useNavigate } from 'react-router-dom';
-
+import { useState, useEffect } from "react";
 export const Home = () => {
   const location = useLocation();
   const { user } = location.state;
   const bucket_url = 'https://practica1b-g12-imagenes.s3.amazonaws.com/Fotos_Perfil/';
-  //yrl de la imagen
+  const [tags, setTags] = useState(null);
   const url = `${bucket_url}${user.image}`;
   console.log(url);
   const navigateTo = useNavigate();
-    
+  
+
+  useEffect(() => {
+      //recargar pagina
+      
+      get_tags();
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); 
+
+
+  const get_tags= async () => {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ url: url }),
+    };
+
+    try {
+      const response = await fetch(
+        "http://192.168.1.49:8081/GetTags",
+        requestOptions
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setTags(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+
+    // Una vez obtenidas las opciones, actualizar el estado dropdownOptions
+  };
   const edit_profile = () => {
     navigateTo("/EditProfile", { state: { user: user,image:url } });
   }
@@ -25,6 +60,9 @@ export const Home = () => {
   const edit_album = () => {
     navigateTo("/EditAlbum", { state: { user: user,image:url } });
   }
+  const ext_phto = ()  => {
+    navigateTo("/ext_phto", { state: { user: user,image:url } })
+  }
   
   return (
     <div className="home-container">
@@ -33,6 +71,13 @@ export const Home = () => {
         <div>
           <p>Usuario: {user.username}</p>
           <p>Nombre: {user.name}</p>
+          {tags ? (
+          <p>{tags.user.tags.join(' ')}</p>
+        ) : (
+          <div className="loader"></div>
+
+        )}
+      
         </div>
       </div>
       <div className="Botones-css">
@@ -48,7 +93,9 @@ export const Home = () => {
       <button onClick={edit_album} className="batman">
         <span>EDITAR ALBUMES</span>
       </button>
-    
+      <button onClick={ext_phto} className="batman">
+        <span>EXTRAER TEXTO</span>
+      </button>
       </div>
 
       <div aria-label="Orange and tan hamster running in a metal wheel" role="img" className="wheel-and-hamster">

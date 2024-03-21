@@ -135,7 +135,13 @@ export const UploadPhoto = () => {
         <div>
           <p>Usuario: {user.username}</p>
           <p>Nombre: {user.name}</p>
-          
+          <button
+            className="button_back"
+            type="button"
+            onClick={() => navigate("/Home", { state: { user } })}
+          >
+            Perfil
+          </button>
         </div>
         <div aria-label="Orange and tan hamster running in a metal wheel" role="img" className="wheel-and-hamster">
 	<div className="wheel"></div>
@@ -194,15 +200,10 @@ export const UploadPhoto = () => {
             <button type="button" onClick={addAlbums}>
               Agregar Album
             </button>
+            <button type="submit">Subir foto</button>
           </div>
-          <button type="submit">Subir foto</button>
-          <button
-            className="button_back"
-            type="button"
-            onClick={() => navigate("/Home", { state: { user } })}
-          >
-            Perfil
-          </button>
+ 
+       
         </form>
       </div>
     </div>
