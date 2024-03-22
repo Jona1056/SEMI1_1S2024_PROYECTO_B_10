@@ -31,7 +31,7 @@ export const Home = () => {
 
     try {
       const response = await fetch(
-        "http://192.168.1.49:8081/GetTags",
+        "http://localhost:8081/GetTags",
         requestOptions
       );
       if (!response.ok) {

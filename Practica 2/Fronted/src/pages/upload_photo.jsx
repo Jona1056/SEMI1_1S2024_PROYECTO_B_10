@@ -18,45 +18,9 @@ export const UploadPhoto = () => {
   const [fileImageUrl, setFileImageUrl] = useState(null);
   // Estado para la imagen seleccionada
   const [selectedImage, setSelectedImage] = useState(null);
-  // Estado para las opciones del menú desplegable
-  const [dropdownOptions, setDropdownOptions] = useState([]);
 
-  useEffect(() => {
-    fetchDropdownOptions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [desc , setDesc] = useState("");
 
-  // Función para obtener las opciones del menú desplegable desde un endpoint
-  const fetchDropdownOptions = async () => {
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username: user.username, name: user.name }),
-    };
-
-    try {
-      const response = await fetch(
-        "http://balanceaorprac1-1947984842.us-east-1.elb.amazonaws.com/GetAlbumns",
-        requestOptions
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const data = await response.json();
-      const dropdownOptions = data.map((album) => ({
-        value: album.id,
-        label: album.name,
-      }));
-
-      setDropdownOptions(dropdownOptions);
-    } catch (error) {
-      console.error("Fetch error:", error);
-    }
-
-    // Una vez obtenidas las opciones, actualizar el estado dropdownOptions
-  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -73,18 +37,18 @@ export const UploadPhoto = () => {
       Swal.fire("Error", "Por favor complete todos los campos", "error");
       return;
     }
-    //obtener el album seleccionado
-    const dropdown = document.getElementById("dropdownOptions");
-    const album = dropdown.options[dropdown.selectedIndex].value;
+
   
     const formData = new FormData();
     formData.append("photoName", photoName);
-    formData.append("image", selectedImage);
-    formData.append("album", album);
+    formData.append("image1", selectedImage);
+    formData.append("image2", selectedImage);
+    formData.append("desc", desc);
+    formData.append("username", user.username);
     console.log(formData);
     //peticion para subir foto
     try{
-        const response = await axios.post("http://balanceaorprac1-1947984842.us-east-1.elb.amazonaws.com/UploadPhotoAlbum",formData,{
+        const response = await axios.post("http://localhost:8081/UploadPhotoAlbum",formData,{
             headers: {
                 "Content-Type": "multipart/form-data",
             },
@@ -96,33 +60,6 @@ export const UploadPhoto = () => {
         if (response.status === 200) {
             Swal.fire("Foto subida exitosamente", "Nueva foto", "success");
         }
-    }catch(error){
-        console.log(error)
-    }
-  };
-
-  // Función para agregar una nueva opción al menú desplegable
-  const addAlbums  =async () => {
-    const newOption = prompt("Ingrese el nombre de la nueva opción:");
-    //peticion para AddAlbums
-    if (!newOption) {
-     Swal.fire("Error", "Por favor ingrese un nombre", "error");
-      return;
-    }
-    try{
-        const response = await axios.post("http://balanceaorprac1-1947984842.us-east-1.elb.amazonaws.com/AddAlbums",{
-            username: user.username,
-            name: user.name,
-            album: newOption
-        })
-        if (response.status === 200) {
-            const newOption = {
-                value: response.data.id,
-                label: response.data.name
-            }
-            setDropdownOptions([...dropdownOptions, newOption]);
-        }
-        Swal.fire("Album creado exitosamente", "Nuevo Album", "success");
     }catch(error){
         console.log(error)
     }
@@ -175,7 +112,7 @@ export const UploadPhoto = () => {
             
           </div>
           <div>
-            <label htmlFor="image">Seleccionar imagen:</label>
+            <label htmlFor="image">Cargar Imagen</label>
             <input
               type="file"
               accept="image/*"
@@ -188,18 +125,14 @@ export const UploadPhoto = () => {
  
  
           </div>
+          <div className="desc">
+              <label htmlFor="dropdownOptions">Descripcion:</label>
+              <textarea className="textdesc" id="dropdownOptions" name="dropdownOptions" rows="8" cols="50"
+              value={desc}
+              onChange={(e) => setDesc(e.target.value)}              
+              />
+          </div>
           <div>
-            <label htmlFor="dropdownOptions">Albums:</label>
-            <select id="dropdownOptions">
-              {dropdownOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            <button type="button" onClick={addAlbums}>
-              Agregar Album
-            </button>
             <button type="submit">Subir foto</button>
           </div>
  

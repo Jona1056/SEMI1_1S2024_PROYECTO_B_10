@@ -114,4 +114,20 @@
   }
   
   
-  
+  .desc label {
+    margin-bottom: 10px;
+  }
+
+  .desc textarea {
+    margin-bottom: 20px;
+  }
+
+  .textdesc  {
+    width: 100%;
+    height: 150px; 
+    padding: 10px; 
+    font-size: 16px; 
+    border: 4px solid #000000; 
+    border-radius: 20px; 
+    resize: vertical; 
+  }

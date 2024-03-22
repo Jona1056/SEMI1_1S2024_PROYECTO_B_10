@@ -34,7 +34,7 @@ export const Images = () => {
         };
   
         try {
-          const response2 = await fetch('http://balanceaorprac1-1947984842.us-east-1.elb.amazonaws.com/GetFotosAlbum', requestOptions2);
+          const response2 = await fetch('http://localhost:8081/GetFotosAlbum', requestOptions2);
           if (!response2.ok) {
             throw new Error(`HTTP error! Status: ${response2.status}`);
           }
@@ -61,7 +61,7 @@ export const Images = () => {
       body: JSON.stringify({ username: user.username, name: user.name }),
     };
     try {
-      const response = await fetch('http://balanceaorprac1-1947984842.us-east-1.elb.amazonaws.com/GetFotosPerfil', requestOptions);
+      const response = await fetch('http://localhost:8081/GetFotosPerfil', requestOptions);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -81,7 +81,7 @@ export const Images = () => {
       body: JSON.stringify({ username: user.username, name: user.name }),
     };
     try {
-      const response = await fetch('http://balanceaorprac1-1947984842.us-east-1.elb.amazonaws.com/GetAlbumns', requestOptions);
+      const response = await fetch('http://localhost:8081/GetAlbumns', requestOptions);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -147,13 +147,18 @@ export const Images = () => {
     <h2>{albumTitle}</h2>
     <div className="carousel-container">
       <div className="carousel">
-        {fotosAlbum[albumTitle].map((foto, fotoIndex) => (
-          <img
-            key={fotoIndex}
-            src={`${bucket_url2}${foto}`}
-            alt={`${bucket_url2}${foto}`}
-            className="carousel-image"
-          />
+        {fotosAlbum[albumTitle].listfotos.map((foto, fotoIndex) => (
+                <div className="carousel-image">
+                    <img
+                      key={fotoIndex}
+                      src={`${bucket_url2}${foto}`}
+                      alt={`${bucket_url2}${foto}`}
+                      
+                    />
+                    <button type="button"  onClick={() =>  navigate("/DetalleFoto", { state: { user, fotoId: fotosAlbum[albumTitle].listid[fotoIndex]  }  })}> Ver Detalle </button>
+                </div>
+                
+         
         ))}
       </div>
     </div>

@@ -35,3 +35,20 @@ def traerImagen(namefoto):
         }
     )
     return url
+
+
+def Tranlatetext(texto , idioma):
+    load_dotenv()
+    translate = boto3.client(
+        'translate',
+        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_TRANSLATE'),
+        aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY_TRANSLATE'),
+        region_name=os.environ.get('AWS_REGION_NAME_TRANSLATE')
+    )
+    response = translate.translate_text(
+        Text=texto,
+        SourceLanguageCode="auto",
+        TargetLanguageCode=idioma
+    )
+
+    return  response['TranslatedText']

@@ -111,3 +111,16 @@ def detect_text( image2_data):
         print("Error al comparar caras:", e)
         return False
     
+
+
+def newAlbumnstag (image_data):
+  
+    response = rekognition.detect_labels(
+        Image={
+            'Bytes': image_data.read()
+        }
+    )
+    etiquetas = [label['Name'] for label in response['Labels']]
+    return etiquetas
+    
+

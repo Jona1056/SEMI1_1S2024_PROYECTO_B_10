@@ -2,11 +2,9 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from db import query
 from encripty import hash_password
-from s3 import SubirS3
+from s3 import SubirS3 ,Tranlatetext
 from s3 import traerImagen
-from rekognition import detect_similitud, detect_faces,detect_text
-
-import requests
+from rekognition import detect_similitud, detect_faces,detect_text, newAlbumnstag
 from io import BytesIO
 from PIL import Image
 
@@ -279,22 +277,11 @@ def api_get_albumns():
     
 
     albumns = [{'id': album[0], 'name': album[2]} for album in results]
+
     return jsonify(albumns), 200
 
 
-@app.route('/AddAlbums', methods=['POST'])
-def api_add_albums():
-    user = request.json.get('username')
-    album = request.json.get('album')
 
-    results,_ = query("SELECT id FROM Usuario WHERE usuario = %s", (user,))
-    if len(results) == 0:
-        return jsonify({'mensaje':"Usuario no encontrado"}), 405
-    
-    UserId = results[0][0]
-    _, id = query("INSERT INTO Album (usuario_id, nombre) VALUES (%s, %s)", (UserId, album,))
-    
-    return jsonify({"id":id , "name": album}), 200 
 
 
 @app.route('/EditAlbums', methods=['POST'])
@@ -318,18 +305,34 @@ def api_delete_albums():
     return jsonify({"id":album}), 200
 
 
+
+
 # ---------------------------------------- FOTO ----------------------------------------
+@app.route('/DetalleFoto', methods=['POST'])
+def api_detalle_foto():
+    foto = request.json.get('IdFoto')
+    results,_ = query("SELECT * FROM Foto WHERE id = %s", (foto,))
+    if len(results) == 0:
+        return jsonify({'mensaje':"Foto no encontrada"}), 405
+    
+    print(results)
+    return jsonify({"imagen":results[0][2] , "detalle": results[0][3]}) , 200
+
 @app.route('/GetFotosAlbum', methods=['POST'])
 def api_get_fotos_album():
     albums = request.json.get('albums')
     names = request.json.get('names')
     
-    listFotos = {}
+    listphotos = {}
     for index , id_album  in enumerate(albums):
-        results,_ = query("SELECT foto FROM Foto WHERE album_id = %s", (id_album,))
-        listFotos[names[index]] = [foto[0] for foto in results]
-
-    return  jsonify(listFotos), 200
+        results,_ = query("SELECT * FROM Foto WHERE album_id = %s", (id_album,))
+        jsonenv = {
+            "listfotos":[ foto[2] for index , foto in enumerate(results)],
+            "listid": [ foto[0] for index , foto in enumerate(results)], 
+        }   
+        listphotos[names[index]] = jsonenv
+         
+    return  jsonify(listphotos), 200
 
 @app.route('/GetFotosPerfil', methods=['POST'])
 def api_get_fotos_perfil():
@@ -348,24 +351,50 @@ def api_get_fotos_perfil():
 
 @app.route('/UploadPhotoAlbum', methods=['POST'])
 def api_upload_photo_album():
-    album = request.form['album']
     photoName = request.form['photoName']
-    image = request.files['image']
+    imageR = request.files['image1']
+    imageS3 = request.files['image2']
+    desc = request.form['desc']
+    user = request.form['username']
 
-    TipeFormat = image.filename.split(".")[-1]
+
+    TipeFormat = imageS3.filename.split(".")[-1]
     NewName = f"{photoName}.{TipeFormat}"
-    image.filename = NewName
+    imageS3.filename = NewName
 
-    query("INSERT INTO Foto (foto , album_id) VALUES (%s, %s)", (image.filename , album))
+
+    id_user,_ = query("SELECT id FROM Usuario WHERE usuario = %s", (user,))
+    ListaAlbums = newAlbumnstag(imageR) 
+    for album in ListaAlbums:
+        Existe,_= query("SELECT  COUNT(*) , id FROM Album WHERE  usuario_id = %s and nombre = %s", (id_user[0][0],album,))
+        if Existe[0][0] == 0:
+            _, id_album = query("INSERT INTO Album (usuario_id, nombre) VALUES (%s, %s)", (id_user[0][0], album,))
+            query("INSERT INTO Foto (foto , album_id , descripcion) VALUES (%s, %s, %s)", (imageS3.filename , id_album ,  desc,))
+            print("album creado")
+        else:
+            query("INSERT INTO Foto (foto , album_id , descripcion) VALUES (%s, %s, %s)", (imageS3.filename , Existe[0][1] ,  desc,))
+            print("Ya existe el album")
     
-    SubirS3(f"Fotos_Publicadas/{image.filename}", image)
-
-
-    return jsonify({'message':"Foto subida exitosamente"}), 200
-
+    SubirS3(f"Fotos_Publicadas/{NewName}", imageS3)
+   
+    return jsonify({'message': "Foto subida exitosamente"}), 200
 
 
 
+@app.route('/Traduccion', methods=['POST'])
+def api_traduccion():
+    text = request.json.get('texto')
+    idioma = request.json.get('idioma')
+    EnvTraduccion = ""
+    if idioma == "Aleman":
+        EnvTraduccion = Tranlatetext(text, "de")
+    elif idioma == "Ingles":
+        EnvTraduccion = Tranlatetext(text, "en")
+    elif idioma == "Chino":
+        EnvTraduccion = Tranlatetext(text, "zh")
+    else:
+        EnvTraduccion = text
+    return jsonify(EnvTraduccion), 200
 
 
 

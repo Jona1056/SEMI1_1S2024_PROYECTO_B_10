@@ -44,14 +44,29 @@
     margin-bottom: 10px;
     display: flex;
     flex-wrap: nowrap;
-    scroll-snap-type: x mandatory; /* Permite que las imágenes se ajusten al contenedor */
+    scroll-snap-type: x mandatory; 
   }
   
   .carousel-image {
-    flex: 0 0 auto; /* Evita que las imágenes se expandan */
-    width: 300px; /* Ancho de cada imagen */
-    height: auto; /* Altura ajustada automáticamente */
-    margin-right: 10px; /* Espacio entre las imágenes */
-    scroll-snap-align: start; /* Alinea cada imagen con el inicio del contenedor */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra los elementos horizontalmente */
+  }
+  
+  .carousel-image img {
+    flex: 0 0 auto;
+    width: 300px; /* La imagen ocupa todo el ancho del contenedor */
+    height: auto; /* Altura ajustada automáticamente según el ancho */
+    margin-right: 10px;
+    scroll-snap-align: start;
+  }
+  
+  .carousel-image button {
+    margin-top: 10px; /* Espacio entre la imagen y el botón */
+    background-color: black;
+    color: rgb(255, 255, 255); /* Texto blanco */
+    border: none; /* Sin borde */
+    padding: 10px; /* Añade espacio alrededor del texto */
+    cursor: pointer; /* Cambia el cursor al pasar el ratón */
   }
   

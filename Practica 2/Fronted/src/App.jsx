@@ -9,6 +9,7 @@ import {Images} from './pages/images';
 import {EditAlbum} from './pages/edit_album';
 import { LoginForm_camara } from "./pages/login_camara";
 import { Extphoto } from "./pages/ext_photo";
+import { DetalleFoto } from "./pages/DetalleFoto";
 function App() {
   return (
     <>
@@ -23,6 +24,7 @@ function App() {
         <Route path="/EditAlbum" element={<EditAlbum/>} /> {/* Ruta para editar album */}
         <Route path="/loginwithcamara" element={<LoginForm_camara />} /> {/* Ruta para el inicio de sesión con camara */}
         <Route path="/ext_phto" element={<Extphoto />} /> {/* Ruta para el inicio de sesión con camara */}
+        <Route path="/DetalleFoto" element={<DetalleFoto/>} /> {/* Ruta para manejar errores */}
     </Routes>
     </>
   );
