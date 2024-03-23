@@ -12,7 +12,7 @@ def conversa_bot(texto , idsesion):
     response = lexbot.recognize_text(
         botId='0DASNASAFI',  # Reemplaza con el ID del bot XT6OH4MSZF RED5JONUNV
         botAliasId='TSTALIASID',  # Reemplaza con el ID del alias
-        sessionId='0020',  # Reemplaza con el ID de sesión
+        sessionId= idsesion,  # Reemplaza con el ID de sesión
         localeId = 'es_419',
         text= texto  # Mensaje que deseas enviar al bot
     )

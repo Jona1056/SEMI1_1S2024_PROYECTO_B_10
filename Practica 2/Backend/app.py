@@ -8,6 +8,7 @@ from chatbot import conversa_bot
 from rekognition import detect_similitud, detect_faces,detect_text, newAlbumnstag
 from io import BytesIO
 from PIL import Image
+import uuid
 
 import os
 url_bucket = "https://practica1b-g12-imagenes.s3.amazonaws.com/Fotos_Perfil/"
@@ -402,7 +403,16 @@ def api_traduccion():
 def interactua_bot():
     text = request.json.get('texto')
     sesionid = request.json.get('id_conv')
-    response = conversa_bot(text,sesionid)
+    print(sesionid)
+    if sesionid == '':  # Si 'id_conv' no está presente en la solicitud
+        sesionid = str(uuid.uuid4())  # Genera un UUID
+    
+    mensajes = conversa_bot(text,sesionid)
+
+    response = {
+        "mensajes" : mensajes,
+        "id_conv" : sesionid
+    }
     return response
 
 
