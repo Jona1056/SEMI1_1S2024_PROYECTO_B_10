@@ -64,8 +64,7 @@ Funcionalidad del chatbot la cual obtiene la información del usuario y le deja 
 
 #### Detectar Similitud
 
-#### Detectar Caras
-
 #### Detectar Texto
+![](https://github.com/Jona1056/GRUPO_1012_SEMI/blob/main/Practica%202/Images/extraerfoto.png)
 
 #### Detectar Labels
