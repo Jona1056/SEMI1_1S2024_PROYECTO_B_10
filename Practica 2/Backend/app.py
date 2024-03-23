@@ -4,6 +4,7 @@ from db import query
 from encripty import hash_password
 from s3 import SubirS3 ,Tranlatetext
 from s3 import traerImagen
+from chatbot import conversa_bot
 from rekognition import detect_similitud, detect_faces,detect_text, newAlbumnstag
 from io import BytesIO
 from PIL import Image
@@ -396,6 +397,13 @@ def api_traduccion():
         EnvTraduccion = text
     return jsonify(EnvTraduccion), 200
 
+
+@app.route('/interactua_bot', methods=['POST'])
+def interactua_bot():
+    text = request.json.get('texto')
+    sesionid = request.json.get('id_conv')
+    response = conversa_bot(text,sesionid)
+    return response
 
 
 # ------------------------------- OTROS ----------------------------------------

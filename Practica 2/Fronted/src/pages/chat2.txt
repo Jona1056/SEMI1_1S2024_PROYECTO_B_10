@@ -1,0 +1,53 @@
+import React, { useState } from 'react';
+import './css/chat.css'; // Estilos CSS para el chat popup
+
+const Chat = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
+
+  const toggleChat = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const sendMessage = () => {
+    if (newMessage.trim() !== '') {
+      setMessages([...messages, { text: newMessage, sender: 'user' }]);
+      setNewMessage('');
+    }
+  };
+
+  return (
+    <div className={`chat-popup ${isOpen ? 'open' : ''}`}>
+      <button className="chat-btn" onClick={toggleChat}>
+        Chat
+      </button>
+      <div className="chat-content">
+        <div className="message-container">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={`message ${message.sender === 'user' ? 'user-message' : 'other-message'}`}
+            >
+              {message.text}
+            </div>
+          ))}
+        </div>
+        <div className="input-container">
+          <input
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Escribe tu mensaje..."
+            className="message-input"
+          />
+          <button onClick={sendMessage} className="send-btn">
+            Enviar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Chat;

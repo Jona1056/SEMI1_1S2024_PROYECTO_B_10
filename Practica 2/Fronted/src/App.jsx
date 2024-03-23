@@ -10,6 +10,8 @@ import {EditAlbum} from './pages/edit_album';
 import { LoginForm_camara } from "./pages/login_camara";
 import { Extphoto } from "./pages/ext_photo";
 import { DetalleFoto } from "./pages/DetalleFoto";
+
+import Chat from './pages/chat'
 function App() {
   return (
     <>
@@ -26,6 +28,7 @@ function App() {
         <Route path="/ext_phto" element={<Extphoto />} /> {/* Ruta para el inicio de sesión con camara */}
         <Route path="/DetalleFoto" element={<DetalleFoto/>} /> {/* Ruta para manejar errores */}
     </Routes>
+    <Chat/>
     </>
   );
 }
