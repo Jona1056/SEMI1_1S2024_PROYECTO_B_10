@@ -407,8 +407,16 @@ def interactua_bot():
     if sesionid == '':  # Si 'id_conv' no está presente en la solicitud
         sesionid = str(uuid.uuid4())  # Genera un UUID
     
-    mensajes = conversa_bot(text,sesionid)
-
+    
+    try:
+        mensajes = conversa_bot(text,sesionid)
+    except:
+        mensajes = [
+            {"content":"No podemos atender tu solicitud, pero puedes:"},
+            {"content":"Recibir un cumplido"},
+            {"content":"Aadoptar una mascota"},
+            {"content":"Contratar un seguro"}
+        ]
     response = {
         "mensajes" : mensajes,
         "id_conv" : sesionid
