@@ -38,7 +38,7 @@ export const EditAlbum = () => {
 
     try {
       const response = await fetch(
-        "http://balanceaorprac1-1947984842.us-east-1.elb.amazonaws.com/GetAlbumns",
+        "http://localhost:8081/GetAlbumns",
         requestOptions
       );
       if (!response.ok) {
@@ -77,7 +77,7 @@ export const EditAlbum = () => {
     //peticion para subir foto
     try {
       const response = await axios.post(
-        "http://balanceaorprac1-1947984842.us-east-1.elb.amazonaws.com/UploadPhotoAlbum",
+        "http://localhost:8081/UploadPhotoAlbum",
         formData,
         {
           headers: {
@@ -134,7 +134,7 @@ export const EditAlbum = () => {
     const album = dropdown.options[dropdown.selectedIndex].value;
 
     try {
-      const response = await axios.post("http://balanceaorprac1-1947984842.us-east-1.elb.amazonaws.com/EditAlbums", {
+      const response = await axios.post("http://localhost:8081/EditAlbums", {
         album: album,
         newName: newOption,
       });
@@ -163,7 +163,7 @@ export const EditAlbum = () => {
     const album = dropdown.options[dropdown.selectedIndex].value;
 
     try {
-      const response = await axios.post("http://balanceaorprac1-1947984842.us-east-1.elb.amazonaws.com/DeleteAlbums", {
+      const response = await axios.post("http://localhost:8081/DeleteAlbums", {
         album: album,
 
       });

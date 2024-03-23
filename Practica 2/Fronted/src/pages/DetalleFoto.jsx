@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import "./css/Detallefoto.css";
 export const DetalleFoto = () => {
     const location = useLocation();
-    const { user , fotoId } = location.state;
+    const {fotoId } = location.state;
     const [Detalle, SetDetalle] = useState([]);
     const bucket_url2 = 'https://practica1b-g12-imagenes.s3.amazonaws.com/Fotos_Publicadas/';
     const [selectedOption, setSelectedOption] = useState(null);

@@ -133,12 +133,18 @@ export const Images = () => {
       
       <p className="title">Fotos de Perfil</p>
       <div className="carousel-container">
-        <div className="carousel">
-          {/* Mapear las fotos de perfil y mostrarlas en el carrusel */}
-          {fotosPerfil.map((foto, index) => (
-            <img key={index} src={`${bucket_url}${foto.foto}`} alt={`Foto ${index}`} className="carousel-image" />
-          ))}
-        </div>
+      <div className="carousel">
+  {/* Mapear las fotos de perfil y mostrarlas en el carrusel */}
+  {fotosPerfil.map((foto, index) => (
+    <img
+      key={index}
+      src={`${bucket_url}${foto.foto}`}
+      alt={`Foto ${index}`}
+      className="carousel-image"
+      style={{ maxWidth: "200px", height: "auto" }} // Ajusta el ancho máximo aquí
+    />
+  ))}
+</div>
       </div>
       <p className="title">Fotos de Álbumes</p>
       {/* Mostrar fotos de los álbumes si fotosAlbum es un array */}
@@ -148,6 +154,7 @@ export const Images = () => {
     <div className="carousel-container">
       <div className="carousel">
         {fotosAlbum[albumTitle].listfotos.map((foto, fotoIndex) => (
+                // eslint-disable-next-line react/jsx-key
                 <div className="carousel-image">
                     <img
                       key={fotoIndex}

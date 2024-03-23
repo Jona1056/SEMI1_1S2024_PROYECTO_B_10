@@ -42,7 +42,7 @@ export const Edit = () => {
     formData.append("imageoriginal", user.image);
 
     try {
-      const response = await axios.post("http://balanceaorprac1-1947984842.us-east-1.elb.amazonaws.com/EditUser", formData, {
+      const response = await axios.post("http://localhost:8081/EditUser", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import  { useState, useRef, useEffect } from 'react';
 import './css/chat.css'; // Estilos CSS para el chat popup
 import axios from 'axios'; // Importar axios para hacer la solicitud HTTP
 
