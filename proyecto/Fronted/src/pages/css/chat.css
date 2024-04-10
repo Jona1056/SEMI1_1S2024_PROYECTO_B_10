@@ -1,0 +1,295 @@
+.chat-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  max-width: 350px;
+  max-height: 500px;
+}
+
+.chat-popup {
+  display: none;
+  position: relative;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  max-height: 80vh; /* Limita la altura del chat para que sea desplazable */
+  overflow-y: auto; /* Hace que el contenido del chat sea desplazable */
+  transition: transform 0.3s ease;
+}
+
+.chat-popup.open {
+  display: block;
+}
+
+/* Otros estilos... */
+
+
+.chat-popup {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    transition: transform 0.3s ease;
+    background-color: #f0f0f0; /* Color de fondo del popup */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chat-btn {
+    background-color:  #ccf4f8 ;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    height: 60px;
+    font-size: 24px;
+    cursor: pointer;
+    top: 0;
+    right: 0;
+  }
+  
+  .chat-content {
+    padding: 20px;
+    height: 300px; /* Ajusta la altura según tus necesidades */
+    overflow-y: auto; /* Hacer que el contenido del chat sea desplazable */
+    position: relative; /* Agregado */
+  }
+  
+  .messages {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .message {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    max-width: 70%; /* Limitar el ancho del mensaje para que no sea demasiado ancho */
+  }
+  
+  .message p {
+    margin: 0;
+  }
+  
+  .sent {
+    align-self: flex-end;
+    background-color: #007bff; /* Color de fondo para mensajes enviados */
+    border-radius: 8px; /* Redondeamos las esquinas */
+    padding: 5px 9px; /* Ajustamos el relleno */
+    max-width: 70%; /* Limitar el ancho del mensaje para que no sea demasiado ancho */
+    text-align: right; /* Alineamos el texto a la derecha */
+    color: #ffffff; /* Color del texto para mensajes enviados */
+  }
+  
+  .received {
+    align-self: flex-start;
+    background-color: #e5e5e5; /* Color de fondo para mensajes recibidos */
+    border-radius: 15px; /* Redondeamos las esquinas */
+    padding: 8px 12px; /* Ajustamos el relleno */
+    max-width: 70%; /* Limitar el ancho del mensaje para que no sea demasiado ancho */
+  }
+  
+  .message-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    margin-right: 10px;
+    color: #ccc;
+  }
+  
+  .send-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  .message-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    margin-right: 10px;
+    color: #213547;
+  }
+  
+  .chat-btn {
+    /* Otros estilos... */
+    display: inline-block;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .input-container {
+    background-color: #ffffff;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    display: flex;
+  }
+
+
+  .chat-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+  }
+  
+  .chat-popup {
+    display: none;
+    position: relative;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    max-height: 80vh; /* Limita la altura del chat para que sea desplazable */
+    overflow-y: auto; /* Hace que el contenido del chat sea desplazable */
+  }
+  
+  .chat-popup.open {
+    display: block;
+  }
+  
+  .chat-content {
+    padding: 20px;
+  }
+  
+  .messages {
+    padding-bottom: 70px; /* Ajusta el padding-bottom para dejar espacio para el footer */
+  }
+  
+  .chat-footer {
+    position: sticky; /* Hace que el footer se quede fijo mientras se hace scroll */
+    bottom: 0;
+    background-color: #ffffff;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .message-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    margin-right: 10px;
+  }
+  
+  .send-btn {
+    width: 80px; /* Ancho del botón de enviar */
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .minimize-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .minimize-btn:hover {
+    background-color: #0056b3; /* Cambia el color al pasar el mouse sobre el botón */
+  }
+  
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    /*background-color: #8cccec;*/
+    background-color:  #e4f4fc ;
+    color: white;
+  }
+  
+  .minimize-btn {
+    background-color: transparent;
+    color: black;
+    border: none;
+    font-size: 50px;
+    cursor: pointer;
+  }
+  
+  .minimize-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .chat-header h2 {
+    margin: 0;
+  }
+  
+  .chat-content {
+    padding: 20px;
+  }
+  
+  .messages {
+    padding-bottom: 70px; /* Ajusta el padding-bottom para dejar espacio para el footer */
+  }
+  
+  .chat-footer {
+    position: sticky; /* Hace que el footer se quede fijo mientras se hace scroll */
+    bottom: 0;
+    background-color: #ffffff;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .message-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    margin-right: 10px;
+  }
+  
+  .send-btn {
+    width: 80px; /* Ancho del botón de enviar */
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .titulo-chat{
+    font-size: 20px;
+    color: #213547;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  }
+
+  .bot-image{
+    height: 50px;
+  }

@@ -1,0 +1,72 @@
+.home-container2 {
+   
+    justify-content: center; /* Centra horizontalmente el contenido */
+    align-items: center; /* Centra verticalmente el contenido */
+    height: 100vh; /* Establece la altura del contenedor al 100% del viewport */
+    padding: 20px; /* Añade espacio alrededor del contenido */
+  }
+  p {
+  
+    color: #4e89ae; /* Color fuerte que combina con celeste */
+    font-family: Arial, sans-serif; /* Otro tipo de letra */
+    font-weight: bold; /* Negrita */
+    font-size: 18px; /* Tamaño de fuente */
+  }
+  .title{
+    margin-left: 340px;
+    font-size:60px;
+  }
+  .user-info {
+    margin-top:-10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+  button {
+    margin-right:10px;
+  }
+  .carousel-container {
+
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px; /* Espacio entre los datos del usuario y el carrusel */
+    overflow-x: auto; /* Agregar scroll horizontal al contenedor */
+    padding: 0 20px; /* Agregar padding horizontal */
+  }
+  
+  .carousel {
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: nowrap;
+    scroll-snap-type: x mandatory; 
+  }
+  
+  .carousel-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra los elementos horizontalmente */
+  }
+  
+  .carousel-image img {
+    flex: 0 0 auto;
+    width: 300px; /* La imagen ocupa todo el ancho del contenedor */
+    height: auto; /* Altura ajustada automáticamente según el ancho */
+    margin-right: 10px;
+    scroll-snap-align: start;
+  }
+  
+  .carousel-image button {
+    margin-top: 10px; /* Espacio entre la imagen y el botón */
+    background-color: black;
+    color: rgb(255, 255, 255); /* Texto blanco */
+    border: none; /* Sin borde */
+    padding: 10px; /* Añade espacio alrededor del texto */
+    cursor: pointer; /* Cambia el cursor al pasar el ratón */
+  }
+  

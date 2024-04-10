@@ -1,0 +1,92 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  
+  .image-container {
+    flex: 0.5;
+    border: 5px solid #001aff; /* Borde de 2px de grosor y color gris */
+    border-radius: 10px; /* Bordes redondeados */
+    overflow: hidden; /* Oculta cualquier parte de la imagen que sobresalga del contenedor */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    position: relative;
+    margin-top: 10px;
+  }
+  
+  .image-container img {
+    width: 100%;
+    height: auto;
+    display: block; /* Asegura que la imagen se comporte como un bloque y no tenga espacios adicionales */
+  }
+  
+  .form-container {
+    flex: 1;
+    padding-left: 20px; /* Espacio entre la imagen y el formulario */
+  }
+  .form-container label {
+    font-size: 25px; /* Tamaño de la fuente */
+    font-weight: bold; /* Negrita */
+    color: #000000; /* Color azul */
+    }
+  
+  .textarea {
+    width: 100%;
+    padding: 10px; /* Espaciado interno */
+    border: 5px solid #001aff; /* Borde de 1px sólido color gris */
+    border-radius: 5px; /* Bordes redondeados */
+    resize: vertical; /* Permite redimensionar verticalmente */
+    font-size: 16px; /* Tamaño de la fuente */
+    line-height: 1.5; /* Altura de línea */
+  }
+  
+  .textarea:focus {
+    outline: none; /* Quita el contorno al enfocar */
+    border-color: #007bff; /* Cambia el color del borde al enfocar */
+  }
+  
+  .select-container {
+    margin-top: 10px;
+  }
+  
+  .select-container select {
+    width: 20%; /* Ajusta el ancho al 100% del contenedor */
+    padding: 8px; /* Espaciado interno */
+    font-size: 15px; /* Tamaño de la fuente */
+    border: 1px solid #ccc; /* Borde de 1px sólido color gris */
+    border-radius: 10px; /* Bordes redondeados */
+    background-color: #f9f9f9; /* Color de fondo */
+    appearance: none; /* Quita los estilos nativos del navegador */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+  }
+  
+  .select-container select:focus {
+    outline: none; /* Quita el contorno al enfocar */
+    border-color: #0057fa; /* Cambia el color del borde al enfocar */
+    box-shadow: 0 0 5px rgba(21, 255, 0, 0.5); /* Sombra suave al enfocar */
+  }
+  
+  .button-container {
+    margin-top: 20px;
+  }
+  
+  .button-container button {
+    padding: 10px 20px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño de la fuente */
+    border: none; /* Quita el borde */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #007bff; /* Color de fondo */
+    color: white; /* Color del texto */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s ease; /* Transición suave */
+  }
+  
+  .button-container button:hover {
+    background-color: #0056b3; /* Cambia el color de fondo al pasar por encima */
+  }
+  
+  .button-container button:focus {
+    outline: none; /* Quita el contorno al enfocar */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra suave al enfocar */
+  }
+  
