@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, Button, Container } from "react-bootstrap";
+import { Form, Button} from "react-bootstrap";
 import "./css/loginForm.css";
 import Swal from "sweetalert2";
 import { useNavigate } from 'react-router-dom';
@@ -9,18 +9,12 @@ export const LoginForm = () => {
   const [password, setPassword] = useState("");
   const navigateTo = useNavigate();
 
-  const handleIngresarPorCamara = () => {
-    // Llama a la función o método que deseas ejecutar aquí
-    // Por ejemplo:
-    navigateTo("/loginwithcamara");
-};
-
   const handleLogin = async (e) => {
     e.preventDefault();
    
     try {
       // fetch("http://192.168.1.49:8081/login"
-      const response = await fetch("http://18.223.187.228:8081/login", {
+      const response = await fetch("http://192.168.1.49:8081//login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,14 +29,14 @@ export const LoginForm = () => {
         console.log(user)
 
         navigateTo("/Home", { state: { user: user } });
-        window.isLoggedIn = true;
+
         //borrar valores en los campos
         setUsername("");
         setPassword("");
       }else if(response.status === 401){
         Swal.fire("Error","Contraseña incorrecta","error"); 
       }else if
-      (response.status === 404 || response.status === 500){
+      (response.status === 400|| response.status === 500){
         Swal.fire("Error","Usuario no encontrado","error");
       }
     } catch (error) {
@@ -51,48 +45,39 @@ export const LoginForm = () => {
   };
 
   return (
-    <div className="login-container">
-      {" "}
-      {/* Contenedor principal con estilos CSS */}
-      <Container>
-        <div className="login-box">
-          {" "}
-          {/* Contenedor del formulario */}
-          <h2>Iniciar Sesión</h2>
-          <Form onSubmit={handleLogin}>
-            <Form.Group controlId="formUsername">
-              <Form.Label>Usuario</Form.Label>
-              <Form.Control
+   
+    
+    <div className="blurred-box">
+   
+      <div className="user-login-box">
+      
+        <Form.Group controlId="formUsername">
+         
+              <Form.Control className="user-password"
                 type="text"
-                placeholder="Ingresa tu usuario"
+                placeholder="Usuario"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
             </Form.Group>
-
             <Form.Group controlId="formPassword">
-              <Form.Label>Contraseña</Form.Label>
-              <Form.Control
+          
+              <Form.Control className="user-password"
                 type="password"
-                placeholder="Ingresa tu contraseña"
+                placeholder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Group>
-
-            <Button variant="success" type="submit" className="login-button">
-              Ingresar
-            </Button>
-
-            <Button variant="success" className="login-button" onClick={handleIngresarPorCamara}>
-                Ingresar por cámara
-            </Button>
-            <Form.Text className="text-muted">
+            <Button className="" onClick={handleLogin}>Ingresar</Button>
+            <Form.Text className="user-name">
               ¿No tienes una cuenta? <a href="/create_user">Crea una aquí</a>.
             </Form.Text>
-          </Form>
-        </div>
-      </Container>
+
+
+   
+      </div>
+      
     </div>
   );
-};
+}

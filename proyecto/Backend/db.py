@@ -2,11 +2,17 @@ import mysql.connector
 import os
 from dotenv import load_dotenv
 
+# db = {
+#     'host': os.environ.get('DB_HOST'),
+#     'user': os.environ.get('DB_USER'),
+#     'password': os.environ.get('DB_PASSWORD'),
+#     'database': os.environ.get('DB_DATABASE')
+# }
 db = {
-    'host': os.environ.get('DB_HOST'),
-    'user': os.environ.get('DB_USER'),
-    'password': os.environ.get('DB_PASSWORD'),
-    'database': os.environ.get('DB_DATABASE')
+    'host': '127.0.0.1',
+    'user': 'root',
+    'password': 'root',
+    'database':'proyecto_semi'
 }
 
 
@@ -21,6 +27,27 @@ def query(query , parms):
         results = cursor.fetchall()
         idz = cursor.lastrowid
         connection.commit()
+        print("conexion exitosa")
+        return results , idz
+    except mysql.connector.Error as e:
+        return None
+    finally:
+        if cursor:
+            cursor.close()
+        if connection and connection.is_connected():
+            connection.close()
+def query2(query):
+    connection = None
+    cursor = None
+    try:
+        load_dotenv()
+        connection = mysql.connector.connect(**db)
+        cursor = connection.cursor()
+        cursor.execute(query)
+        results = cursor.fetchall()
+        idz = cursor.lastrowid
+        connection.commit()
+        print("conexion exitosa")
         return results , idz
     except mysql.connector.Error as e:
         return None

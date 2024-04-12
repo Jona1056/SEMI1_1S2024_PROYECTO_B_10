@@ -1,0 +1,54 @@
+.ap-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.ap-container h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.ap-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.ap-container label {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.ap-container input,
+.ap-container select {
+    margin-bottom: 16px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.ap-container button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.ap-container button:hover {
+    background-color: #0056b3;
+}
+
+.ap-container button:focus {
+    outline: none;
+}
+
+h4{
+    text-align: center;
+ 
+  
+   font-size:15px;
+}

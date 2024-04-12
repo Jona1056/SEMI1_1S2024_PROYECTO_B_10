@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Form, Button, Container } from "react-bootstrap";
+import { FaTimes } from 'react-icons/fa';
 import "./css/loginForm.css";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -9,20 +10,22 @@ export const Login_create = () => {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(true);
-  const [image, setImage] = useState(null);
+  //correo
+  const [email, setEmail] = useState("");
+
 
   useEffect(() => {
     setPasswordMatch(password === password2);
   }, [password, password2]);
 
-  const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
-  };
 
+  const handleClose = () => {
+    window.location.href = "/";
+  };
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!username || !name || !password || !password2 || !image) {
+    if (!username || !name || !password || !password2 || !email) {
       alert("Por favor complete todos los campos.");
       return;
     }
@@ -36,10 +39,10 @@ export const Login_create = () => {
     formData.append('username', username);
     formData.append('name', name);
     formData.append('password', password);
-    formData.append('image', image);
+    formData.append('email', email);
     
     try {                               
-      const response = await axios.post('http://18.223.187.228:8081/CreateUser', formData, {
+      const response = await axios.post('http://192.168.1.49:8081/CreateUser', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -52,7 +55,7 @@ export const Login_create = () => {
         setName("");
         setPassword("");
         setPassword2("");
-        setImage(null);
+        setEmail("");
         
         // Guardar la imagen en una carpeta de tu PC
       }
@@ -67,10 +70,11 @@ export const Login_create = () => {
     <div className="login-container">
       <Container>
         <div className="login-box2">
+        <FaTimes className="close-icon" onClick={handleClose} />
           <h2>Crea tu Usuario</h2>
           <Form onSubmit={handleLogin}>
             <Form.Group controlId="formUsername">
-              <Form.Label>Usuario</Form.Label>
+   
               <Form.Control
                 type="text"
                 placeholder="Ingresa tu usuario"
@@ -80,7 +84,7 @@ export const Login_create = () => {
             </Form.Group>
 
             <Form.Group controlId="formName">
-              <Form.Label>Nombre</Form.Label>
+          
               <Form.Control
                 type="text"
                 placeholder="Ingresa tu Nombre"
@@ -89,8 +93,18 @@ export const Login_create = () => {
               />
             </Form.Group>
 
+            <Form.Group controlId="formEmail">
+            
+              <Form.Control
+                type="email"
+                placeholder="Ingresa tu correo"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Form.Group>
+
             <Form.Group controlId="formPassword">
-              <Form.Label>Contraseña</Form.Label>
+       
               <Form.Control
                 type="password"
                 placeholder="Ingresa tu contraseña"
@@ -100,7 +114,7 @@ export const Login_create = () => {
             </Form.Group>
 
             <Form.Group controlId="formPassword2">
-              <Form.Label>Repetir Contraseña</Form.Label>
+          
               <Form.Control
                 type="password"
                 placeholder="Repite tu contraseña"
@@ -109,32 +123,19 @@ export const Login_create = () => {
                 isInvalid={!passwordMatch}
               />
               {!passwordMatch && (
-                <Form.Control.Feedback type="invalid">
+                <Form.Control.Feedback type="invalid" style={{ color: 'white', marginTop: '10px' }}>
                   Las contraseñas no coinciden.
                 </Form.Control.Feedback>
               )}
             </Form.Group>
 
-            <Form.Group controlId="formImage">
-              <Form.Label>Imagen de Perfil</Form.Label>
-              <Form.Control
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-            </Form.Group>
+           
 
-            {image && (
-              <img
-                src={URL.createObjectURL(image)}
-              alt="Imagen seleccionada"
-              style={{ maxWidth: "100%", width: "200px", height: "200px" }}
-              />
-            )}
+            
        
 
 
-            <Button variant="success" type="submit" className="login-button">
+            <Button className="button1" type="submit" >
               Crear
             </Button>
           </Form>

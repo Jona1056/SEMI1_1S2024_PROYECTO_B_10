@@ -1,123 +1,126 @@
-import { useLocation } from "react-router-dom";
+
 import "./css/Home.css"; // Importa tu archivo CSS
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
+
+import { Navbar1 } from "./navbar_login";
+
+
+// import { useState, useEffect } from "react";
 export const Home = () => {
-  const location = useLocation();
-  const { user } = location.state;
-  const bucket_url = 'https://practica1b-g12-imagenes.s3.amazonaws.com/Fotos_Perfil/';
-  const [tags, setTags] = useState(null);
-  const url = `${bucket_url}${user.image}`;
-  console.log(url);
-  const navigateTo = useNavigate();
-  
+
+  const [publicaciones, setPublicaciones] = useState([]);
+  const [nuevoComentario, setNuevoComentario] = useState("");
+  //obtener datos de local store state
 
   useEffect(() => {
-      //recargar pagina
-      
-      get_tags();
-         // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); 
-
-
-  const get_tags= async () => {
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url: url }),
+    const obtenerPublicaciones = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/publicaciones");
+        if (!response.ok) {
+          throw new Error("No se pudo obtener la lista de publicaciones");
+        }
+        const data = await response.json();
+        console.log(data);
+        setPublicaciones(data);
+      } catch (error) {
+        console.error("Error al obtener las publicaciones:", error);
+      }
     };
 
+    obtenerPublicaciones();
+  }, []);
+
+  const agregarComentario = async (index) => {
     try {
-      const response = await fetch(
-        "http://18.223.187.228:8081/GetTags",
-        requestOptions
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+      const response = await fetch(`http://localhost:3000/comentarios/${index}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ comentario: nuevoComentario }),
+      });
+      if (response.ok) {
+        // Si la solicitud fue exitosa, actualiza el estado para reflejar el comentario agregado
+        setPublicaciones((prevPublicaciones) =>
+          prevPublicaciones.map((publicacion, i) =>
+            i === index
+              ? { ...publicacion, comentarios: [...publicacion.comentarios, nuevoComentario] }
+              : publicacion
+          )
+        );
+        // Limpia el textarea después de agregar el comentario
+        setNuevoComentario("");
+      } else {
+        console.error("Error al agregar el comentario:", response.statusText);
       }
-      const data = await response.json();
-      setTags(data);
-      console.log(data);
     } catch (error) {
-      console.error("Fetch error:", error);
+      console.error("Error al agregar el comentario:", error);
     }
-
-    // Una vez obtenidas las opciones, actualizar el estado dropdownOptions
   };
-  const edit_profile = () => {
-    navigateTo("/EditProfile", { state: { user: user,image:url } });
-  }
 
-  const upload_photo = () => {
-    navigateTo("/UploadPhoto", { state: { user: user,image:url } });
-  }
-  const images = () => {
-    navigateTo("/Images", { state: { user: user,image:url } });
-  }
+  const agregarmegusta = async (index) => {
+    try {
+      const response = await fetch(`http://localhost:3000/meGusta/${index}`, {
+        method: "PUT",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        setPublicaciones((prevPublicaciones) =>
+          prevPublicaciones.map((publicacion, i) =>
+            i === index ? { ...publicacion, meGusta: data.meGusta } : publicacion
+          )
+        );
+      } else {
+        console.error("Error al aumentar el me gusta:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error al aumentar el me gusta:", error);
+    }
+  };
 
-  const edit_album = () => {
-    navigateTo("/EditAlbum", { state: { user: user,image:url } });
-  }
-  const ext_phto = ()  => {
-    navigateTo("/ext_phto", { state: { user: user,image:url } })
-  }
-  
   return (
-    <div className="home-container">
-      <div className="user-info">
-        <img src={`${url}`} alt="Imagen de perfil" className="user-image" />
-        <div>
-          <p>Usuario: {user.username}</p>
-          <p>Nombre: {user.name}</p>
-          {tags ? (
-          <p>{tags.user.tags.join(' ')}</p>
-        ) : (
-          <div className="loader"></div>
+    <div >
+      <Navbar1  />
+      <div className="container1">
+      <h1>Publicaciones</h1>
 
-        )}
-      
-        </div>
-      </div>
-      <div className="Botones-css">
-      <button onClick={images} className="batman">
-        <span>VER FOTOS</span>
-      </button >
-      <button onClick={upload_photo}className="batman">
-        <span >SUBIR FOTO</span>
-      </button>
-      <button onClick={edit_profile}className="batman">
-        <span>EDITAR PERFIL</span>
-      </button>
-      <button onClick={edit_album} className="batman">
-        <span>EDITAR ALBUMES</span>
-      </button>
-      <button onClick={ext_phto} className="batman">
-        <span>EXTRAER TEXTO</span>
-      </button>
-      </div>
+      <div className="publicaciones-lista">
+        {publicaciones.map((publicacion, index) => (
+          <div key={index} className="publicacion">
+            <h2>{publicacion.descripcion}</h2>
+            <p>Categoría: {publicacion.categoria}</p>
 
-      <div aria-label="Orange and tan hamster running in a metal wheel" role="img" className="wheel-and-hamster">
-	<div className="wheel"></div>
-	<div className="hamster">
-		<div className="hamster__body">
-			<div className="hamster__head">
-				<div className="hamster__ear"></div>
-				<div className="hamster__eye"></div>
-				<div className="hamster__nose"></div>
-			</div>
-			<div className="hamster__limb hamster__limb--fr"></div>
-			<div className="hamster__limb hamster__limb--fl"></div>
-			<div className="hamster__limb hamster__limb--br"></div>
-			<div className="hamster__limb hamster__limb--bl"></div>
-			<div className="hamster__tail"></div>
-		</div>
-	</div>
-	<div className="spoke"></div>
-</div>
+            <button className="Btn" onClick={() => agregarmegusta(index)}>
+              <span className="leftContainer">
+                <svg
+                  fill="white"
+                  viewBox="0 0 512 512"
+                  height="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"></path>
+                </svg>
+                <span className="like">Like</span>
+              </span>
+              <span className="likeCount"> {publicacion.meGusta}</span>
+            </button>
+            <h1>Comentarios</h1>
+            {publicacion.comentarios.map((comentario, i) => (
+              <p key={i}>{comentario}</p>
+            ))}
+            <textarea
+              value={nuevoComentario}
+              onChange={(e) => setNuevoComentario(e.target.value)}
+            ></textarea>
+            <button className="comment-button" onClick={() => agregarComentario(index)}>
+              Agregar Comentario
+            </button>
+          </div>
+        ))}
+      </div>
+      </div>
     </div>
-
-    
   );
 };

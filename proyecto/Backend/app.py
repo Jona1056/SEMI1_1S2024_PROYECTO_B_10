@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from db import query
+from db import query, query2
 from encripty import hash_password
 from s3 import SubirS3 ,Tranlatetext
 from s3 import traerImagen
+from cognito import singUp
+from cognito import login_cognito
 from chatbot import conversa_bot
 from rekognition import detect_similitud, detect_faces,detect_text, newAlbumnstag
 from io import BytesIO
@@ -25,29 +27,28 @@ def index():
 
 @app.route('/CreateUser', methods=['POST'])
 def api_create_user():
-    user = request.form['username']
-    password = request.form['password']
-    name = request.form['name']
-    images = request.files['image']
-
-    newFilename = NewPhotoName(user)
+    try:
+        user = request.form['username']
+        password = request.form['password']
+        name = request.form['name']
+        email = request.form['email']
+        
+        # Contraseña hash
+        password = hash_password(password)
+        password = password + "D#"
+        
+        # Intenta registrar al usuario
+        response = singUp(user, name, email, password)
+        
+        # Verifica si el registro fue exitoso
+        if response:
+            return jsonify({'mensaje': "Usuario creado"}), 200
+        else:
+            return jsonify({'mensaje': "Error al crear usuario"}), 400
     
-    results,_ = query("SELECT * FROM Usuario WHERE usuario = %s", (user,))
-
-    if len(results) > 0:
-        return jsonify({'mensaje':"El usuario ya existe"}), 400
-    
-    password = hash_password(password)
-    results,  usuario_id = query("INSERT INTO Usuario (usuario , nombre , contrasena) VALUES (%s, %s, %s)", (user, name,password,))
-
-
-    TipeFormat = images.filename.split(".")[-1]
-    images.filename = newFilename + "." + TipeFormat
-    fotoperfil = "Fotos_Perfil/"+images.filename
-
-    SubirS3(fotoperfil, images)
-
-    query("INSERT INTO FotoPerfil (usuario_id, foto) VALUES (%s, %s)", (usuario_id,images.filename))
+    except Exception as e:
+        # Captura cualquier excepción y maneja el error
+        return jsonify({'error': str(e)}), 500
 
     
     return jsonify({'mensaje':"usuario creado"}), 200
@@ -57,137 +58,38 @@ def api_create_user():
 def api_login():
     user = request.json.get('username')
     password = request.json.get('password')
-    
-    results,_ = query("SELECT * FROM Usuario WHERE usuario = %s", (user,))
 
-    if len(results) == 0:
-        return jsonify({'mensaje':"El Usuario No Existe"}), 404
-    
     password = hash_password(password)
-
-    if password != results[0][3]:
-        return jsonify({'mensaje':"Contraseña incorrecta"}), 401
-    
-    datos_personales = results[0]
-
-    results,_ = query("SELECT foto FROM FotoPerfil WHERE usuario_id = %s ORDER BY id DESC LIMIT 1", (datos_personales[0],))
-
-    
-    print(datos_personales)
-    return jsonify({
+    password = password + "D#"
+    response = login_cognito(user, password)
+    print(response)
+    user_log = response['Username']
+    name_log = next((item['Value'] for item in response['UserAttributes'] if item['Name'] == 'name'), None)
+    email_log = next((item['Value'] for item in response['UserAttributes'] if item['Name'] == 'email'), None)
+    if response == False:
+        return jsonify({'mensaje': "Usuario o contraseña incorrectos"}), 400
+    else:
+        return jsonify({
             "mensaje":"Usuario logueado",
             "user":{
-                "username":datos_personales[1],
-                "name":datos_personales[2],
-                "image":results[0][0]
+                "username":user_log,
+                "name":name_log,
+                "email":email_log
+    
             }}), 200
     
-@app.route('/login_camara', methods=['POST'])   
-def api_login_camara():
-    user = request.form['username']
-    image = request.files['image']
-    results, _ = query("SELECT * FROM Usuario WHERE usuario = %s", (user,))
-    if len(results) == 0:
-        return jsonify({'mensaje': "El Usuario No Existe"}), 404
+@app.route("/prueba_base", methods=['GET'])
+def prueba_base():
+    query = "SELECT * FROM Usuario"
+    results, _ = query2(query)
+ 
+    print(results)
+    return jsonify(results), 200
 
-    datos_personales = results[0]
-    results, _ = query("SELECT foto FROM FotoPerfil WHERE usuario_id = %s ORDER BY id DESC LIMIT 1", (datos_personales[0],))
-    imagen_s3 = results[0][0]
-    imagen_url = url_bucket + imagen_s3
-    image_data = image.read()
-    rekog = detect_similitud(imagen_url, image_data)
-    if (rekog == False):
-         return jsonify({
-        "mensaje": "No se puedo comparar las imagenes",
-       }), 305
-         
-    result = rekog.get('FaceMatches')
-    if (result == None or len(result) == 0):
-        return jsonify({
-        "mensaje": "No se encontro ninguna coincidencia",
-       }), 306    
-        
-    result = result[0]
-    result = result["Similarity"]
-    print(result)
-    if(result < 95):
-        return jsonify({
-        "mensaje": "No se encontro coincidencia en las imagenes", 
-       }), 306
-    tags = detect_faces(imagen_url)
-    print(tags)
-    return jsonify({
-        "mensaje": "Usuario autenticado",
-        "user": {
-            "username": datos_personales[1],
-            "name": datos_personales[2],
-            "image": imagen_s3
-        }}), 200
+
+
     
-@app.route('/GetTags', methods=['POST'])
-def get_tags_perfil():
-    image = request.json.get('url')
-    datos  = []
-    tags = detect_faces(image)
-    face_detalles = tags["FaceDetails"][0]
 
-    age_range = face_detalles["AgeRange"]
-    age_range = f"{age_range['Low']} - {age_range['High']} Años"
-    Gender = face_detalles["Gender"]
-
-    if Gender["Value"] == "Male":
-        Gender = "Hombre";
-    else:
-        Gender = "Mujer";
-    datos.append(Gender)
-    datos.append(age_range)
-    print(face_detalles["Smile"]["Value"])
-    if face_detalles["Smile"]["Value"] == False:
-        print("no sonriendo")
-    else:
-        datos.append("Sonriendo")
-        
-    if face_detalles["Eyeglasses"]["Value"]== False:
-        print("no tiene lentes")
-    else:
-        datos.append("Tiene lentes")
-
-        
-    if face_detalles["Beard"]["Value"]== False:
-        print("no tiene barba")
-    else:
-        datos.append("Tiene barba")
-        
-    if face_detalles["Mustache"]["Value"]== False:
-        print("no tiene mustache")
-    else:
-        datos.append("Tiene mustacho")
-        
-    print(face_detalles["Emotions"][0])
-
-    if(face_detalles["Emotions"][0]["Type"] == "CALM"):
-        datos.append("Calmado")
-    elif(face_detalles["Emotions"][0]["Type"] == "HAPPY"):
-        datos.append("Feliz")
-    elif(face_detalles["Emotions"][0]["Type"] == "SAD"):
-        datos.append("Triste")
-    elif(face_detalles["Emotions"][0]["Type"] == "ANGRY"):
-        datos.append("Enojado")
-    elif(face_detalles["Emotions"][0]["Type"] == "DISGUSTED"):
-        datos.append("Disgustado")
-    elif(face_detalles["Emotions"][0]["Type"] == "SURPRISED"):
-        datos.append("Sorprendido")
-    elif(face_detalles["Emotions"][0]["Type"] == "CONFUSED"):
-        datos.append("Confundido")
-    elif(face_detalles["Emotions"][0]["Type"] == "FEAR"):
-        datos.append("Asustado")
-        
-  
-    return jsonify({
-        "mensaje": "Usuario autenticado",
-        "user": {
-            "tags": datos
-        }}), 200
     
 @app.route('/GetText', methods=['POST'])
 def api_get_text():
