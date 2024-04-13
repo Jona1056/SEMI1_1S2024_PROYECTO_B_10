@@ -1,9 +1,25 @@
 .container1 {
+
   max-width: 600px;
   margin: 0 auto;
+  margin-top: 10px;
   padding: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #adacac17;
   border-radius: 5px;
+}
+
+.publicaciones-lista{
+
+  background: linear-gradient(to bottom, #e0d5d523,  #ffffff49);
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 30px 100px rgba(225, 3, 3, 0.1);
+  text-align: center;
+  width: 450px; /* Anchura fija del formulario */
 }
 
 h1 {
@@ -164,4 +180,21 @@ textarea {
 
 .comment-button:focus {
   outline: none;
+}
+
+
+.encabezado {
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-family: "American Typewriter", serif;
+  color:white;
+}
+
+.imagen{
+    width: 320px; /* Ancho deseado */
+    height: auto; /* Altura automática para mantener la proporción */
+   
+    border-radius: 8px; /* Borde redondeado */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    transition: transform 0.3s ease; /* Transición suave */
 }

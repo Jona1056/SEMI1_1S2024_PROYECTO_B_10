@@ -247,7 +247,7 @@ def api_get_fotos_perfil():
     
     UserId = results[0][0]
     results,_ = query("SELECT foto FROM FotoPerfil WHERE usuario_id = %s", (UserId,))
-    
+
     fotos = [{'foto': foto[0]} for foto in results]
 
     return jsonify(fotos), 200
@@ -255,35 +255,59 @@ def api_get_fotos_perfil():
 
 @app.route('/UploadPhotoAlbum', methods=['POST'])
 def api_upload_photo_album():
-    photoName = request.form['photoName']
-    imageR = request.files['image1']
+    reseña = request.form['reseña']
+    Pais = request.form['Pais']
     imageS3 = request.files['image2']
-    desc = request.form['desc']
-    user = request.form['username']
-
-
+    imageR = request.files['image']
+    photoName = "Foto"
+    
+    results, _ = query2("SELECT COUNT(*) FROM Publicacion")
+    photoName = photoName + str(results[0][0])
     TipeFormat = imageS3.filename.split(".")[-1]
     NewName = f"{photoName}.{TipeFormat}"
     imageS3.filename = NewName
+    print(NewName)
 
 
-    id_user,_ = query("SELECT id FROM Usuario WHERE usuario = %s", (user,))
     ListaAlbums = newAlbumnstag(imageR) 
-    for album in ListaAlbums:
-        Existe,_= query("SELECT  COUNT(*) , id FROM Album WHERE  usuario_id = %s and nombre = %s", (id_user[0][0],album,))
-        if Existe[0][0] == 0:
-            _, id_album = query("INSERT INTO Album (usuario_id, nombre) VALUES (%s, %s)", (id_user[0][0], album,))
-            query("INSERT INTO Foto (foto , album_id , descripcion) VALUES (%s, %s, %s)", (imageS3.filename , id_album ,  desc,))
-            print("album creado")
-        else:
-            query("INSERT INTO Foto (foto , album_id , descripcion) VALUES (%s, %s, %s)", (imageS3.filename , Existe[0][1] ,  desc,))
-            print("Ya existe el album")
+    lista_albumns_traducidos = []
+    for albun in ListaAlbums:
+        album = Tranlatetext(albun,"ES")
+        lista_albumns_traducidos.append(album)
     
+    existe, _ = query("SELECT id FROM Pais WHERE nombre = %s", (Pais,))
+    if existe:
+        print("El país ya existe en la base de datos.")
+        id_pais = existe[0][0]  # Obtén el ID del país existente
+    else:
+        print("El país no existe en la base de datos. Se agregará.")
+        _, id_pais = query("INSERT INTO Pais (nombre, bandera) VALUES (%s, %s)", (Pais, ""))
+    ##verificar si ya existe el pais 
+    query("INSERT INTO Publicacion (descripcion, foto, estrellas, pais_id) VALUES (%s, %s, %s, %s)",
+      (reseña, imageS3.filename, 0, id_pais))
+    #obtener id para el album
+    select_id_foto, _  = query("SELECT id FROM Publicacion WHERE foto = %s",(imageS3.filename,))
+    for album in lista_albumns_traducidos:
+    # Verificar si el álbum ya existe
+     
+        _, id_album = query("INSERT INTO Album (nombre) VALUES (%s)", (album,))
+    
+    
+    # Asociar album a la publicacion
+        query("UPDATE Album SET publicacion_id = %s WHERE id = %s", (select_id_foto[0][0], id_album))
+
+
+
     SubirS3(f"Fotos_Publicadas/{NewName}", imageS3)
    
     return jsonify({'message': "Foto subida exitosamente"}), 200
 
-
+@app.route('/publicaciones', methods=['GET'])
+def get_publicaciones():
+    query_sql = "SELECT * FROM Publicacion;"
+    results, _ = query2(query_sql)
+    print(results)
+    return jsonify(results), 200
 
 @app.route('/Traduccion', methods=['POST'])
 def api_traduccion():

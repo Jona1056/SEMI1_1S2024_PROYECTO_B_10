@@ -27,7 +27,6 @@ def query(query , parms):
         results = cursor.fetchall()
         idz = cursor.lastrowid
         connection.commit()
-        print("conexion exitosa")
         return results , idz
     except mysql.connector.Error as e:
         return None
@@ -47,7 +46,6 @@ def query2(query):
         results = cursor.fetchall()
         idz = cursor.lastrowid
         connection.commit()
-        print("conexion exitosa")
         return results , idz
     except mysql.connector.Error as e:
         return None

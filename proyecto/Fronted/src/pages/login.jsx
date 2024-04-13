@@ -14,7 +14,7 @@ export const LoginForm = () => {
    
     try {
       // fetch("http://192.168.1.49:8081/login"
-      const response = await fetch("http://192.168.1.49:8081//login", {
+      const response = await fetch("http://192.168.1.44:8081/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
