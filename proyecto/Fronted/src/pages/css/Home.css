@@ -4,7 +4,7 @@
   margin: 0 auto;
   margin-top: 10px;
   padding: 20px;
-  border: 1px solid #adacac17;
+
   border-radius: 5px;
 }
 
@@ -45,10 +45,19 @@ input, select {
 }
 
 .publicacion {
-  border: 1px solid #ccc;
+ 
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
+}
+
+.publicacion-info{
+  
+  background-color: rgba(53, 5, 142, 0.331);
+  border: 1px solid #ccc;
+    border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px
 }
 
 .publicacion h2 {
@@ -237,7 +246,7 @@ textarea {
   border: none;
   outline: none;
   padding: 0.4vw;
-
+ margin-bottom:  20px;
   transition: .4s;
   height:40px ;
   width: 100%;
@@ -258,12 +267,14 @@ textarea {
 .comentarios-area {
   
   margin-top: 20px;
+
 }
 
 .comentario {
   border: 1px solid #999ca1;
   padding: 10px;
   margin-bottom: 10px;
+  background-color: rgba(53, 5, 142, 0.331);
 }
 
 .comentario p {
