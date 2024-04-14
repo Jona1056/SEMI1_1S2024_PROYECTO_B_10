@@ -304,10 +304,69 @@ def api_upload_photo_album():
 
 @app.route('/publicaciones', methods=['GET'])
 def get_publicaciones():
-    query_sql = "SELECT * FROM Publicacion;"
-    results, _ = query2(query_sql)
+    query_sql = """
+        SELECT 
+       Publicacion.id AS publicacion_id,
+       Publicacion.descripcion AS descripcion_publicacion,
+       Publicacion.foto AS foto_publicacion,
+       Publicacion.estrellas AS estrellas_publicacion,
+       Comentario.id AS comentario_id,
+       Comentario.descripcion AS descripcion_comentario,
+       Comentario.usuario AS usuario_comentario,
+       Comentario.estrellas AS comentario_estrellas,
+       Pais.nombre AS nombre_pais
+   FROM Publicacion
+   LEFT JOIN Comentario ON Publicacion.id = Comentario.publicacion_id
+   LEFT JOIN Pais ON Publicacion.pais_id = Pais.id;
+    """
+    results = query2(query_sql)
     print(results)
-    return jsonify(results), 200
+    
+    # Estructuramos los resultados en una lista de diccionarios donde cada diccionario contiene la información de la publicación y sus comentarios
+    publicaciones_con_comentarios = {}
+    for row in results[0]:  # Iteramos solo sobre la lista de tuplas, sin considerar el segundo elemento de results
+        publicacion_id = row[0]  # Accedemos al ID de la publicación
+        descripcion_publicacion = row[1]  # Accedemos a la descripción de la publicación
+        foto_publicacion = row[2]  # Accedemos a la foto de la publicación
+        estrellas_publicacion = row[3]  # Accedemos a las estrellas de la publicación
+        comentario_id = row[4]  # Accedemos al ID del comentario
+        descripcion_comentario = row[5]  # Accedemos a la descripción del comentario
+        nombre_pais = row[8]  # Accedemos al nombre del país
+        usuario_comentario = row[6]
+        usuario_estrellas = row[7]
+        
+        # Si la publicación no está en el diccionario, la agregamos con una lista vacía de comentarios
+        if publicacion_id not in publicaciones_con_comentarios:
+            publicaciones_con_comentarios[publicacion_id] = {
+                "publicacion": {
+                    "id": publicacion_id,
+                    "descripcion": descripcion_publicacion,
+                    "foto": foto_publicacion,
+                    "estrellas": estrellas_publicacion,
+                    "nombre_pais": nombre_pais # Añadimos el nombre del país aquí
+                   
+                },
+                "comentarios": []
+            }
+        
+        # Si hay un comentario asociado a la publicación, lo agregamos a la lista de comentarios de esa publicación
+        if comentario_id is not None:
+            publicaciones_con_comentarios[publicacion_id]["comentarios"].append({
+                "id": comentario_id,
+                "descripcion": descripcion_comentario,
+                 "nombre_usuario": usuario_comentario,
+                    "estrellas_usuario": usuario_estrellas
+            })
+    
+    # Convertimos el diccionario en una lista para que sea compatible con JSON
+    resultado_final = list(publicaciones_con_comentarios.values())
+    
+    print(resultado_final)
+    return jsonify(resultado_final), 200
+
+
+
+
 
 @app.route('/Traduccion', methods=['POST'])
 def api_traduccion():
