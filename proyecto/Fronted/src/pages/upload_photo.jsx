@@ -48,7 +48,7 @@ export const UploadPhoto = () => {
     console.log(formData);
     //peticion para subir foto
     try{
-        const response = await axios.post("http://18.223.187.228:8081/UploadPhotoAlbum",formData,{
+        const response = await axios.post("http://127.0.0.1:8081/UploadPhotoAlbum",formData,{
             headers: {
                 "Content-Type": "multipart/form-data",
             },

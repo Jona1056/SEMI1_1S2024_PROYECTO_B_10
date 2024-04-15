@@ -1,8 +1,6 @@
 import boto3
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify
 import os
-import requests
 load_dotenv()
 
 myuserpoolid = os.getenv('AWS_USER_POOL_ID_COGNITO')

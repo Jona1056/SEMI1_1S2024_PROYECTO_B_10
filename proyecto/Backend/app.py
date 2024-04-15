@@ -11,6 +11,7 @@ from rekognition import detect_similitud, detect_faces,detect_text, newAlbumnsta
 from io import BytesIO
 from PIL import Image
 import uuid
+import requests
 
 import os
 url_bucket = "https://practica1b-g12-imagenes.s3.amazonaws.com/Fotos_Perfil/"
@@ -32,6 +33,7 @@ def api_create_user():
         password = request.form['password']
         name = request.form['name']
         email = request.form['email']
+        
         
         # Contraseña hash
         password = hash_password(password)
@@ -268,7 +270,6 @@ def api_upload_photo_album():
     imageS3.filename = NewName
     print(NewName)
 
-
     ListaAlbums = newAlbumnstag(imageR) 
     lista_albumns_traducidos = []
     for albun in ListaAlbums:
@@ -395,14 +396,14 @@ def find_album():
    
     query_albums = "SELECT * FROM Album WHERE nombre LIKE %s"
     albums_results, _ = query(query_albums, (f"%{filtro}%",))
-
+    print(albums_results)
 # Paso 2: Buscar publicaciones asociadas a los álbumes encontrados
     publicaciones_con_comentarios = {}
 
     for album in albums_results:
         album_id = album[2]
         # Suponiendo que el ID del álbum está en la primera posición de la tupla
-        print(album_id)
+        print("Entro: ",album_id)
         query_publicaciones = """
         SELECT 
             Publicacion.id AS publicacion_id,
@@ -464,8 +465,21 @@ def find_album():
         
     return jsonify({'message': "Estrellas actualizadas exitosamente"}), 200
 
+@app.route('/TraduccionAutomatica', methods=['POST'])
+def pruebatraductor():
 
+    url_api = 'https://3q2fwrjp5d.execute-api.us-east-1.amazonaws.com/traducirtexto'
 
+    texto = request.json.get('texto')
+    idioma = request.json.get('idioma')
+    
+    response = requests.post(url_api, json={'texto': texto, 'idioma': idioma})
+ 
+    if response.status_code == 200:
+        datos = response.json()
+        return jsonify(datos)
+    
+    return jsonify({'error': 'No se pudo traducir el texto'}), 500
 
 @app.route('/Traduccion', methods=['POST'])
 def api_traduccion():

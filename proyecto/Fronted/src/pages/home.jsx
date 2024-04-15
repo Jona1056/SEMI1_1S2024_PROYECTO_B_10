@@ -15,6 +15,11 @@ export const Home = () => {
   const [album, setAlbum] = useState('');
   const [filtro, setFiltro] = useState('');
 
+  const [traducir , settraducir] = useState(false);
+  const [idioma, setIdioma] = useState(true);
+
+
+
   const handlePuntuacionChange = (e) => {
     setPuntuacion(e.target.value);
   };
@@ -47,7 +52,7 @@ export const Home = () => {
   useEffect(() => {
     const obtenerPublicaciones = async () => {
       try {
-        const response = await fetch("http://192.168.1.44:8081/publicaciones");
+        const response = await fetch("http://127.0.0.1:8081/publicaciones");
         if (!response.ok) {
           throw new Error("No se pudo obtener la lista de publicaciones");
         }
@@ -61,6 +66,7 @@ export const Home = () => {
     };
 
     obtenerPublicaciones();
+    EnviarTraducirTexto();
   }, []);
 
  
@@ -178,6 +184,42 @@ export const Home = () => {
       console.error("Error al enviar el comentario:", error);
     }
   };
+
+  const handletraductor = () => {
+    settraducir(true);
+  }
+
+  const EnviarTraducirTexto = async (params,index, e) => {
+    const data = {
+      texto: params,
+      idioma: e.target.value
+    };
+
+
+    try {
+      
+      const response = await fetch("http://127.0.0.1:8081/TraduccionAutomatica", {
+      method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (response.status === 200) {
+        const Resivido = await response.json();
+        alert(Resivido.body);
+        setIdioma(false)
+      }else if(response.status === 401){
+        Swal.fire("Error","Contraseña incorrecta","error"); 
+      }else if
+      (response.status === 400|| response.status === 500){
+        Swal.fire("Error","Usuario no encontrado","error");
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+    }
+    // settraducir(false);
+  }
   
   return (
     <div>
@@ -232,7 +274,21 @@ export const Home = () => {
                         ""
                       )}
                     </p>
-                    <p>{comentario.descripcion}</p>
+                    {idioma == true ?
+                          <p key={index}>{comentario.descripcion}</p>
+                        : <p key={index}>hola</p>
+                    }
+                    <button onClick={handletraductor}>traducir</button>
+                    {traducir == true ? 
+                        <select  onChange={(event) => EnviarTraducirTexto(comentario.descripcion,index, event)}>
+                          <option value="es" >Español</option>
+                          <option value="en" >Ingles</option>
+                          <option value="de">Aleman</option>
+                          <option value="zh">Chino</option>
+                        </select>
+                      : null
+                    }
+
                   </div>
                 ))}
               </div>
