@@ -15,8 +15,14 @@ export const Home = () => {
   const [album, setAlbum] = useState('');
   const [filtro, setFiltro] = useState('');
 
+
+
+
+
   const [traducir , settraducir] = useState(false);
-  const [idioma, setIdioma] = useState(true);
+  const [idioma, setIdioma] = useState("es");
+
+
 
 
 
@@ -121,8 +127,6 @@ export const Home = () => {
           throw new Error("No se pudo enviar el comentario");
         }
         }catch(e) {
-          console.error("Error al enviar el comentario:", e);
-  
       }
     }
    
@@ -185,40 +189,76 @@ export const Home = () => {
     }
   };
 
+
+
+
+
+
   const handletraductor = () => {
     settraducir(true);
   }
 
-  const EnviarTraducirTexto = async (params,index, e) => {
-    const data = {
-      texto: params,
-      idioma: e.target.value
-    };
 
-
-    try {
-      
-      const response = await fetch("http://127.0.0.1:8081/TraduccionAutomatica", {
-      method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+  const EnviarTraducirTexto = async (params, e) => {
+    if (e && e.target) {
+      const data = {
+          texto: params,
+          idioma: e.target.value
+      };
+      fetch("http://127.0.0.1:8081/TraduccionAutomatica", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+             const ListTemp = publicaciones.map((item) => {
+                    item.comentarios.map((comentario) => {
+                        if (comentario.descripcion === params) {
+                              return comentario.descripcion = data.body;
+                        }else{
+                            return comentario;
+                        }
+                    });    
+                    return item
+              });
+              setPublicaciones(ListTemp);
+      })
+      .catch(error => {
+          console.error("Error al enviar el comentario:", error);
       });
-      if (response.status === 200) {
-        const Resivido = await response.json();
-        alert(Resivido.body);
-        setIdioma(false)
-      }else if(response.status === 401){
-        Swal.fire("Error","Contraseña incorrecta","error"); 
-      }else if
-      (response.status === 400|| response.status === 500){
-        Swal.fire("Error","Usuario no encontrado","error");
-      }
-    } catch (error) {
-      console.error("Error en la solicitud:", error);
+
+      settraducir(false);
+      setIdioma(e.target.value);
     }
-    // settraducir(false);
+  }
+
+  const TextoToVoz = (texto) => {
+
+    const data = {
+        texto: texto,
+        idioma: idioma
+    };
+    
+    fetch("http://127.0.0.1:8081/TextToVoz", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+      })
+      .then(response => response.blob())
+      .then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const audio = new Audio(url);
+          audio.play();
+      })
+      .catch(error => {
+          console.error("Error", error);
+      });
+
   }
   
   return (
@@ -226,25 +266,27 @@ export const Home = () => {
       <Navbar1 />
 
       <div className="container1">
-      <input
-      type="text"
-      placeholder="Buscar por Pais, Descripcion o Estrellas"
-      value={filtro}
-      onChange={handleFiltroChange}
-    />
-    <input
-      type="text"
-      placeholder="Buscar por Album"
-      value={album}
-      onChange={handleAlbumChange}
-    />
-<button onClick={findAlbum}>Buscar</button>
-      {publicacionesFiltradas.map((item, index) => (
+          <input
+          type="text"
+          placeholder="Buscar por Pais, Descripcion o Estrellas"
+          value={filtro}
+          onChange={handleFiltroChange}
+        />
+
+        <input
+          type="text"
+          placeholder="Buscar por Album"
+          value={album}
+          onChange={handleAlbumChange}
+        />
+        <button onClick={findAlbum}>Buscar</button>
+
+        {publicacionesFiltradas.map((item, index) => (
         
           // eslint-disable-next-line react/jsx-key
-          <div className="publicaciones-lista">
+          <div  key={index} className="publicaciones-lista">
             <div key={index} className="publicacion">
-              <div className="publicacion-info">
+              <div key={index} className="publicacion-info">
                 <h2 className="encabezado">
                   Lugar: {item.publicacion.nombre_pais}
                 </h2>
@@ -274,21 +316,20 @@ export const Home = () => {
                         ""
                       )}
                     </p>
-                    {idioma == true ?
-                          <p key={index}>{comentario.descripcion}</p>
-                        : <p key={index}>hola</p>
-                    }
+
+                    <p>{comentario.descripcion}</p>
                     <button onClick={handletraductor}>traducir</button>
                     {traducir == true ? 
-                        <select  onChange={(event) => EnviarTraducirTexto(comentario.descripcion,index, event)}>
+                        <select  onChange={(event) => EnviarTraducirTexto(comentario.descripcion, event)}>
                           <option value="es" >Español</option>
                           <option value="en" >Ingles</option>
                           <option value="de">Aleman</option>
                           <option value="zh">Chino</option>
                         </select>
                       : null
-                    }
 
+                    }
+                     <button onClick={ () => TextoToVoz(comentario.descripcion)} > 🔊 </button>
                   </div>
                 ))}
               </div>

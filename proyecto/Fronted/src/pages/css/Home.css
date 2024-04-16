@@ -270,6 +270,7 @@ textarea {
 
 }
 
+
 .comentario {
   border: 1px solid #999ca1;
   padding: 10px;
@@ -280,4 +281,33 @@ textarea {
 .comentario p {
   color:white;
     margin: 0;
+}
+
+.comentario button {
+  background-color: #000000;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.comentario select {
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid #000000;
+  border-radius: 10px;
+}
+.comentario select:hover {
+  box-shadow: 0 0 0 .35vw rgba(135, 207, 235, 0.186);
+}
+.comentario option {
+  background-color: #000000;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 15px;
 }

@@ -52,3 +52,26 @@ def Tranlatetext(texto , idioma):
     )
 
     return  response['TranslatedText']
+
+
+
+def TextToVoz(traductor , texto):
+    load_dotenv()
+    client = boto3.client(
+        'polly',
+        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_POLLY'),
+        aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY_POLLY'),
+        region_name=os.environ.get('AWS_REGION_NAME_POLLY')
+    )
+
+    response = client.synthesize_speech(
+        Text=texto,
+        OutputFormat='mp3',
+        VoiceId= traductor
+    )
+
+    body = response['AudioStream'].read()
+    
+    with open('speech.mp3', 'wb') as file:
+        file.write(body)
+        file.close()
