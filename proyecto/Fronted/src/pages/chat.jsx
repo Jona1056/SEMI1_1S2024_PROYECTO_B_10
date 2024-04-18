@@ -37,14 +37,17 @@ const Chat = () => {
 
       
       // Realizar la solicitud HTTP con axios
-      axios.post('http://18.223.187.228:8081/interactua_bot', { texto: messageInput, id_conv: idConvLS })
+      //axios.post('http://18.223.187.228:8081/interactua_bot', { texto: messageInput, id_conv: idConvLS })
+      axios.post('http://localhost:8081/interactua_bot', { texto: messageInput, id_conv: idConvLS })
         .then((response) => {
           console.log(JSON.stringify(response.data));
           let idConv = response.data['id_conv'] ;
           localStorage.setItem('id_conv', idConv);
+          console.log("id " + idConv)
           // Puedes manejar la respuesta aquí si es necesario
           // Aquí es donde puedes añadir el mensaje del bot al estado de mensajes
-          response.data['mensajes'].forEach((item) => {
+          console.log(response.data)
+          response.data['messages'].forEach((item) => {
             const botMessage = { text: item['content'], sender: 'bot received' };
              // Agregar el mensaje del bot al estado de mensajes
              setMessages(prevMessages => [...prevMessages, botMessage]);

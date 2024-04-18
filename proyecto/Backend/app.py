@@ -309,24 +309,29 @@ def pruebatraductor():
 def interactua_bot():
     text = request.json.get('texto')
     sesionid = request.json.get('id_conv')
-    print(sesionid)
-    if sesionid == '':  # Si 'id_conv' no está presente en la solicitud
+    print(text, sesionid)
+    if sesionid == '' or sesionid== 'undefined':  # Si 'id_conv' no está presente en la solicitud
         sesionid = str(uuid.uuid4())  # Genera un UUID
+        print(sesionid)
     
-    
+    response = {}
     try:
-        mensajes = conversa_bot(text,sesionid)
+        #mensajes = conversa_bot(text,sesionid)
+        response = conversa_bot(text,sesionid)
+        #print(response)
     except:
-        mensajes = [
+        response['messages'] = [
             {"content":"No podemos atender tu solicitud, pero puedes:"},
-            {"content":"Recibir un cumplido"},
-            {"content":"Aadoptar una mascota"},
-            {"content":"Contratar un seguro"}
+            {"content":"Buscar lugares dependiendo de su numero de estrellas"},
+            {"content":"Buscar los países mejor calificados"},
+            #{"content":"Contratar un seguro"}
         ]
-    response = {
-        "mensajes" : mensajes,
-        "id_conv" : sesionid
-    }
+    #response = {
+    #    "mensajes" : mensajes,
+    #    "id_conv" : sesionid
+    #}
+    response["id_conv"] = sesionid
+    print(response)
     return response
 
 
