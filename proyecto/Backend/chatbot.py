@@ -31,17 +31,7 @@ def conversa_bot(texto , idsesion):
     
     print(">>", intent, confirmationState, slots)
 
-    if intent == "BuscarlugaresPorPais":
-        if confirmationState == "Confirmed":
-            pais = slots['Pais']['value']['resolvedValues'][0]
-            print("Pais:", pais)
-            # buscar hotel en pais
-            lugares = ["hotelPais1", "hotelPais2", "hotelPais3"]
-            response['messages'] = [{
-                "contentType": "PlainText",
-                "content": f'Los lugares que se encuentran en {pais} son {", ".join(lugares)}',
-                }]
-    elif intent == "BuscarPorEstrellas":
+    if intent == "BuscarPorEstrellas":
         if confirmationState == "Confirmed":
             estrellas = slots['Estrellas']['value']['resolvedValues'][0]
             print("Estrellas:", estrellas)
@@ -66,27 +56,33 @@ def conversa_bot(texto , idsesion):
             # mensaje end of chat
             response['messages'].append(mensajeFinal)
     elif intent== "Paises":
-        # lista de paises
         if confirmationState == "Confirmed":
-            paises = ["Pais1", "Pais2", "Pais3"]
+            #paises = ["Pais1", "Pais2", "Pais3"]
+            paises = busca_paises()
+            # mensaje inicial
             response['messages'] = [{
-                    "contentType": "PlainText",
-                    "content": f'Los países de los cuales tenemos reseñas disponibles son {", ".join(paises)}',
-                    }]
-            response['sessionState']['intent']['state'] = "Fulfilled"
+                "contentType": "PlainText",
+                "content": f'Los países mejor calificados son:',
+                }]
+            # mensajes para cada pais
+            for i in paises:
+                response['messages'].append({
+                "contentType": "PlainText",
+                "content": f'{i[0]}',
+                })
+            # mensaje end of chat
+            response['messages'].append(mensajeFinal)
+            #response['sessionState']['intent']['state'] = "Fulfilled"
     else:
         response['messages'] = [
             {"content":"No podemos atender tu solicitud, pero puedes:"},
             {"content":"Buscar lugares dependiendo de su numero de estrellas"},
-            {"content":"Buscar los países mejor calificados"},
-            #{"content":"Contratar un seguro"}
+            {"content":"Buscar los países mejor calificados"}
         ]
 
     #print("mensajes en chatbot")
     #print(response['messages'])
     return response
-
-    #return  response['messages']
 
 def busca_estrellas(estrellas):
     consulta = "SELECT id, TRIM(descripcion)  FROM Publicacion p WHERE estrellas = %s"
@@ -95,5 +91,5 @@ def busca_estrellas(estrellas):
 
 def busca_paises():
     consulta = "SELECT p.nombre, AVG(p2.estrellas) AS promedio FROM Pais p INNER JOIN Publicacion p2 ON p.id =p2.pais_id GROUP BY p.nombre ORDER BY promedio DESC LIMIT 5"
-    resultado, _ = query(consulta, (estrellas,))
+    resultado, _ = query2(consulta, (estrellas,))
     return resultado

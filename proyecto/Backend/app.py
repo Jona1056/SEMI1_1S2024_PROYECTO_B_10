@@ -312,24 +312,19 @@ def interactua_bot():
     print(text, sesionid)
     if sesionid == '' or sesionid== 'undefined':  # Si 'id_conv' no está presente en la solicitud
         sesionid = str(uuid.uuid4())  # Genera un UUID
-        print(sesionid)
+        print("session id", sesionid)
     
     response = {}
     try:
-        #mensajes = conversa_bot(text,sesionid)
         response = conversa_bot(text,sesionid)
         #print(response)
     except:
         response['messages'] = [
             {"content":"No podemos atender tu solicitud, pero puedes:"},
             {"content":"Buscar lugares dependiendo de su numero de estrellas"},
-            {"content":"Buscar los países mejor calificados"},
-            #{"content":"Contratar un seguro"}
+            {"content":"Buscar los países mejor calificados"}
         ]
-    #response = {
-    #    "mensajes" : mensajes,
-    #    "id_conv" : sesionid
-    #}
+
     response["id_conv"] = sesionid
     print(response)
     return response
