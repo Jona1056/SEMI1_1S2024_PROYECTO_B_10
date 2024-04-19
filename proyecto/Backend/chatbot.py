@@ -92,3 +92,8 @@ def busca_estrellas(estrellas):
     consulta = "SELECT id, TRIM(descripcion)  FROM Publicacion p WHERE estrellas = %s"
     resultado, _ = query(consulta, (estrellas,))
     return resultado
+
+def busca_paises():
+    consulta = "SELECT p.nombre, AVG(p2.estrellas) AS promedio FROM Pais p INNER JOIN Publicacion p2 ON p.id =p2.pais_id GROUP BY p.nombre ORDER BY promedio DESC LIMIT 5"
+    resultado, _ = query(consulta, (estrellas,))
+    return resultado
