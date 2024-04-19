@@ -9,6 +9,7 @@ export const AgregarPublicacion = () => {
 
   const [photoReseña, setPhotoReseña] = useState("");
   const [photoPais, setPhotoPais] = useState("");
+  const [photolugar, setPhotoLugar] = useState("");
   const [fileImageUrl, setFileImageUrl] = useState(null);
   // Estado para la imagen seleccionada
   const [selectedImage, setSelectedImage] = useState(null);
@@ -25,6 +26,7 @@ export const AgregarPublicacion = () => {
         formData.append("Pais", photoPais);
         formData.append("image", selectedImage);
         formData.append("image2", selectedImage);
+        formData.append("lugar", photolugar);
         console.log(formData);
 
         try{
@@ -37,6 +39,7 @@ export const AgregarPublicacion = () => {
             setPhotoPais("");
             setFileImageUrl(null);
             setSelectedImage(null);
+            setPhotoLugar("");
             setPhotoReseña(null)
             if (response.status === 200) {
                 Swal.fire("Foto subida exitosamente", "Nueva foto", "success");
@@ -80,7 +83,7 @@ export const AgregarPublicacion = () => {
 
      
           <div>
-            <h1 htmlFor="photoName">Reseña</h1>
+            <h1 htmlFor="photoName">Descripcion</h1>
             <input
               type="text"
               id="photoName"
@@ -90,6 +93,13 @@ export const AgregarPublicacion = () => {
           </div>
 
           <div>
+          <h1 htmlFor="photoName">Lugar</h1>
+            <input
+              type="text"
+              id="photoName"
+              value={photolugar}
+              onChange={(e) => setPhotoLugar(e.target.value)}
+            />
             <h1 htmlFor="photoName">Pais</h1>
             <input
               type="text"

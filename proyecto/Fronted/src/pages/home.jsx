@@ -127,6 +127,7 @@ export const Home = () => {
           throw new Error("No se pudo enviar el comentario");
         }
         }catch(e) {
+          console.error("Error al enviar el comentario:", e);
       }
     }
    
@@ -288,7 +289,12 @@ export const Home = () => {
             <div key={index} className="publicacion">
               <div key={index} className="publicacion-info">
                 <h2 className="encabezado">
-                  Lugar: {item.publicacion.nombre_pais}
+                  Pais: {item.publicacion.nombre_pais}
+                  
+                </h2>
+                <h2 className="encabezado">
+                  Lugar: {item.publicacion.lugar}
+                  
                 </h2>
                 <h2 
                 value = {item.publicacion.id}
