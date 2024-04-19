@@ -90,7 +90,7 @@ def busca_estrellas(estrellas):
     return resultado
 
 def busca_paises():
-    consulta = "SELECT p.nombre, AVG(p2.estrellas) AS promedio FROM Pais p INNER JOIN Publicacion p2 ON p.id =p2.pais_id GROUP BY p.nombre ORDER BY promedio DESC LIMIT 5"
+    consulta = "SELECT p.nombre, ROUND(AVG(p2.estrellas),0) AS promedio FROM Pais p INNER JOIN Publicacion p2 ON p.id =p2.pais_id GROUP BY p.nombre ORDER BY promedio DESC LIMIT 5"
     print(consulta)
     resultado, _ = query2(consulta,)
     return resultado
