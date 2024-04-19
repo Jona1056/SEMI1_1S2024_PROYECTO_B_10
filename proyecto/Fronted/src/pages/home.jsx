@@ -44,11 +44,13 @@ export const Home = () => {
     const nombrePais = item.publicacion.nombre_pais.toLowerCase();
     const estrellas = item.publicacion.estrellas.toString();
     const descripcion = item.publicacion.descripcion.toLowerCase();
+    const lugar1 = item.publicacion.lugar.toLowerCase();
     console.log(estrellas)
     return (
       nombrePais.includes(filtro.toLowerCase()) ||
       estrellas.includes(filtro) ||
-      descripcion.includes(filtro.toLowerCase())
+      descripcion.includes(filtro.toLowerCase())||
+      lugar1.includes(filtro.toLowerCase())
     );
   });
   // const [nuevoComentario, setNuevoComentario] = useState("");

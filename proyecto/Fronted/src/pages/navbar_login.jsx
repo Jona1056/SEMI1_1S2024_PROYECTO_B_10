@@ -17,8 +17,11 @@ export const Navbar1 = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-black rounded-3">
       <div className="container-fluid">
-        <div className="container-fluid">
-          <NavLink className="navbar-brand" >Viajes</NavLink>
+        <div className="container-fluid" style={{display: "flex", alignItems: "center"}}>
+          {/*imagen*/}
+          <img src="./src/assets/viajar.png" alt="Viajrar" style={{ width: '50px', height: '50px' }}/>
+          <h1 className="navbar-brand" style={{ marginRight:"100px"}}>Destinos Inteligentes</h1>
+         
         </div>
 
         <div className="collapse navbar-collapse" id="navbarNav">

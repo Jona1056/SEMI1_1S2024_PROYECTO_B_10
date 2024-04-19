@@ -418,7 +418,8 @@ def find_album():
             Comentario.descripcion AS descripcion_comentario,
             Comentario.usuario AS usuario_comentario,
             Comentario.estrellas AS comentario_estrellas,
-            Pais.nombre AS nombre_pais
+            Pais.nombre AS nombre_pais,
+            Publicacion.lugar as lugar
         FROM Publicacion
         LEFT JOIN Comentario ON Publicacion.id = Comentario.publicacion_id
         LEFT JOIN Pais ON Publicacion.pais_id = Pais.id
@@ -436,6 +437,7 @@ def find_album():
             nombre_pais = row[8]  # Accedemos al nombre del país
             usuario_comentario = row[6]
             usuario_estrellas = row[7]
+            lugar = row[9]
         
         # Si la publicación no está en el diccionario, la agregamos con una lista vacía de comentarios
         if publicacion_id not in publicaciones_con_comentarios:
@@ -445,7 +447,8 @@ def find_album():
                     "descripcion": descripcion_publicacion,
                     "foto": foto_publicacion,
                     "estrellas": estrellas_publicacion,
-                    "nombre_pais": nombre_pais # Añadimos el nombre del país aquí
+                    "nombre_pais": nombre_pais,# Añadimos el nombre del país aquí
+                    "lugar": lugar
                    
                 },
                 "comentarios": []
