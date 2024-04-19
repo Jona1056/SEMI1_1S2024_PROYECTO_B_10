@@ -1,5 +1,6 @@
 import os , boto3 
 from dotenv import load_dotenv
+from db import query, query2
 
 def conversa_bot(texto , idsesion):
     load_dotenv()
@@ -46,10 +47,10 @@ def conversa_bot(texto , idsesion):
             print("Estrellas:", estrellas)
 
             # buscar lugares con esta cantidad de estrellas
-            # lugares = busca_estrellas(estrellas)
+            lugares = busca_estrellas(estrellas)
 
             # provisional
-            lugares = [[1, "hotel1"], [2, "hotel2"], [3, "hotel3"]]
+            #lugares = [[1, "hotel1"], [2, "hotel2"], [3, "hotel3"]]
 
             # mensaje inicial
             response['messages'] = [{

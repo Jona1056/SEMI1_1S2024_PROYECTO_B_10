@@ -2,6 +2,7 @@ import mysql.connector
 import os
 from dotenv import load_dotenv
 
+
 # db = {
 #     'host': os.environ.get('DB_HOST'),
 #     'user': os.environ.get('DB_USER'),
@@ -11,12 +12,13 @@ from dotenv import load_dotenv
 db = {
     'host': '127.0.0.1',
     'user': 'root',
-    'password': 'mysql',
+    'password': '1q2w3e4r5t',
     'database':'proyecto_semi'
 }
 
 
 def query(query , parms):
+    print (query)
     connection = None
     cursor = None
     try:
@@ -29,6 +31,7 @@ def query(query , parms):
         connection.commit()
         return results , idz
     except mysql.connector.Error as e:
+        print(e)
         return None
     finally:
         if cursor:
