@@ -68,7 +68,7 @@ def conversa_bot(texto , idsesion):
             for i in paises:
                 response['messages'].append({
                 "contentType": "PlainText",
-                "content": f'{i[0]}',
+                "content": f'{i[0]} con {i[1]} estrellas',
                 })
             # mensaje end of chat
             response['messages'].append(mensajeFinal)
