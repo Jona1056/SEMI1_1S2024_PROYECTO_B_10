@@ -8,6 +8,7 @@ from cognito import singUp
 from cognito import login_cognito
 from chatbot import conversa_bot
 from rekognition import detect_similitud, detect_faces,detect_text, newAlbumnstag
+from sns import subscribe, publish, unsubscribe
 from io import BytesIO
 from PIL import Image
 import uuid
@@ -528,6 +529,35 @@ def interactua_bot():
     print(response)
     return response
 
+@app.route('/snsSubscribe', methods=['POST'])
+def snsSubscribe():
+    endpoint = request.json.get('endpoint')
+    print("endpoint", endpoint)
+    try:
+        response = subscribe(endpoint)
+    except:
+        print("Error al suscribirse")
+    return response
+
+@app.route('/snsPublish', methods=['POST'])
+def snsPublish():
+    titulo = request.json.get('titulo')
+    descripcion = request.json.get('descripcion')
+    try:
+        response = publish(titulo, descripcion)
+    except:
+        print("Error al publicar")
+    return response
+
+@app.route('/snsUnsubscribe', methods=['POST'])
+def snsUnsubscribe():
+    subscriptionArn = request.json.get('subscriptionArn')
+    print("subscriptionArn", subscriptionArn)
+    try:
+        response = unsubscribe(subscriptionArn)
+    except:
+        print("Error al desuscribir", subscriptionArn)
+    return response
 
 # ------------------------------- OTROS ----------------------------------------
 def  NewPhotoName(user):
