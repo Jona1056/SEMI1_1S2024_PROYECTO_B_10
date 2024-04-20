@@ -85,7 +85,7 @@ def conversa_bot(texto , idsesion):
     return response
 
 def busca_estrellas(estrellas):
-    consulta = "SELECT id, TRIM(descripcion)  FROM Publicacion p WHERE estrellas = %s"
+    consulta = "SELECT id, TRIM(lugar)  FROM Publicacion p WHERE estrellas = %s"
     resultado, _ = query(consulta, (estrellas,))
     return resultado
 
