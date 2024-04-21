@@ -13,6 +13,9 @@ export const Login_create = () => {
   //correo
   const [email, setEmail] = useState("");
 
+  // sns
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
 
   useEffect(() => {
     setPasswordMatch(password === password2);
@@ -22,6 +25,32 @@ export const Login_create = () => {
   const handleClose = () => {
     window.location.href = "/";
   };
+
+  const handleSubscribe = async (email, usuario) =>{
+    let data = JSON.stringify({
+      "endpoint": email,
+      "usuario":usuario
+    });
+    
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'http://127.0.0.1:8081/snsSubscribe',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : data
+    };
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -35,13 +64,18 @@ export const Login_create = () => {
       return;
     }
 
+
+
+
     const formData = new FormData();
     formData.append('username', username);
     formData.append('name', name);
     formData.append('password', password);
     formData.append('email', email);
     
-    try {                               
+    try {
+      handleSubscribe(email, username);
+
       const response = await axios.post('http://127.0.0.1:8081/CreateUser', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -58,6 +92,9 @@ export const Login_create = () => {
         setEmail("");
         
         // Guardar la imagen en una carpeta de tu PC
+
+        
+
       }
     } catch (error) {
       error.response.status === 400 && Swal.fire("Error","El usuario ya existe","error");
@@ -132,7 +169,15 @@ export const Login_create = () => {
            
 
             
-       
+            <Form.Group controlId="formNotification">
+              <Form.Check
+                type="checkbox"
+                label={<span style={{ textShadow: '0 0 15px white', fontSize: '1.1em' }}>Suscribirme a notificaciones</span>}
+                checked={isSubscribed}
+                onChange={(e) => setIsSubscribed(e.target.checked)}
+              />
+            </Form.Group>
+
 
 
             <Button className="button1" type="submit" >

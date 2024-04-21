@@ -8,6 +8,7 @@ from cognito import singUp
 from cognito import login_cognito
 from chatbot import conversa_bot
 from rekognition import detect_similitud, detect_faces,detect_text, newAlbumnstag
+from sns import subscribe, publish, unsubscribe
 from io import BytesIO
 from PIL import Image
 import uuid
@@ -301,7 +302,13 @@ def api_upload_photo_album():
 
 
     SubirS3(f"Fotos_Publicadas/{NewName}", imageS3)
-   
+
+
+    try:
+        response = publish(lugar, reseña)
+    except:
+        print("Error al publicar")
+
     return jsonify({'message': "Foto subida exitosamente"}), 200
 
 @app.route('/publicaciones', methods=['GET'])
@@ -508,26 +515,56 @@ def api_traduccion():
 def interactua_bot():
     text = request.json.get('texto')
     sesionid = request.json.get('id_conv')
-    print(sesionid)
-    if sesionid == '':  # Si 'id_conv' no está presente en la solicitud
+    print(text, sesionid)
+    if sesionid == '' or sesionid== 'undefined':  # Si 'id_conv' no está presente en la solicitud
         sesionid = str(uuid.uuid4())  # Genera un UUID
-    
-    
+        print("session id", sesionid)
+
+    response = {}
     try:
-        mensajes = conversa_bot(text,sesionid)
+        response = conversa_bot(text,sesionid)
+        #print(response)
     except:
-        mensajes = [
+        response['messages'] = [
             {"content":"No podemos atender tu solicitud, pero puedes:"},
-            {"content":"Recibir un cumplido"},
-            {"content":"Aadoptar una mascota"},
-            {"content":"Contratar un seguro"}
+            {"content":"Buscar lugares dependiendo de su numero de estrellas"},
+            {"content":"Buscar los países mejor calificados"}
         ]
-    response = {
-        "mensajes" : mensajes,
-        "id_conv" : sesionid
-    }
+
+    response["id_conv"] = sesionid
+    print(response)
     return response
 
+@app.route('/snsSubscribe', methods=['POST'])
+def snsSubscribe():
+    endpoint = request.json.get('endpoint')
+    usuario = request.json.get('usuario')
+    try:
+        response = subscribe(endpoint, usuario)
+        print(response)
+    except:
+        print("Error al suscribirse")
+    return response
+
+@app.route('/snsPublish', methods=['POST'])
+def snsPublish():
+    titulo = request.json.get('titulo')
+    descripcion = request.json.get('descripcion')
+    try:
+        response = publish(titulo, descripcion)
+    except:
+        print("Error al publicar")
+    return response
+
+@app.route('/snsUnsubscribe', methods=['POST'])
+def snsUnsubscribe():
+    subscriptionArn = request.json.get('subscriptionArn')
+    print("subscriptionArn", subscriptionArn)
+    try:
+        response = unsubscribe(subscriptionArn)
+    except:
+        print("Error al desuscribir", subscriptionArn)
+    return response
 
 # ------------------------------- OTROS ----------------------------------------
 def  NewPhotoName(user):
