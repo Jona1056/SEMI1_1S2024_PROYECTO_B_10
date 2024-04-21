@@ -302,7 +302,13 @@ def api_upload_photo_album():
 
 
     SubirS3(f"Fotos_Publicadas/{NewName}", imageS3)
-   
+
+
+    try:
+        response = publish(lugar, reseña)
+    except:
+        print("Error al publicar")
+
     return jsonify({'message': "Foto subida exitosamente"}), 200
 
 @app.route('/publicaciones', methods=['GET'])
@@ -532,9 +538,10 @@ def interactua_bot():
 @app.route('/snsSubscribe', methods=['POST'])
 def snsSubscribe():
     endpoint = request.json.get('endpoint')
-    print("endpoint", endpoint)
+    usuario = request.json.get('usuario')
     try:
-        response = subscribe(endpoint)
+        response = subscribe(endpoint, usuario)
+        print(response)
     except:
         print("Error al suscribirse")
     return response

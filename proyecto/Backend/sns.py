@@ -1,5 +1,6 @@
 import os , boto3 
 from dotenv import load_dotenv
+from db import query, query2
 
 load_dotenv()
 sns = boto3.client(
@@ -10,9 +11,8 @@ sns = boto3.client(
     )
 topic = "arn:aws:sns:us-east-1:637423543189:Publicaciones"
 
-def subscribe(endpoint):
+def subscribe(endpoint, usuario):
     protocol = "email"
-    
     try:
         response = sns.subscribe(
             TopicArn=topic,
@@ -20,11 +20,16 @@ def subscribe(endpoint):
             Endpoint=endpoint,
             ReturnSubscriptionArn=True
         )
-        print("Suscrito a", endpoint)
-    except:
+        query("INSERT INTO Subscripcion(usuario, arn) VALUES (%s, %s)", (usuario,response["SubscriptionArn"]))
+
+    except Exception as e:
         print("Error al suscribir", endpoint)
+        print("Error", e);
 
     return response
+    #return {
+    #    "status":200
+    #}
 
 def publish(titulo, descripcion):
     try:

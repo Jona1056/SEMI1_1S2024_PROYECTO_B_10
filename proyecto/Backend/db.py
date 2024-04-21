@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 db = {
     'host': '127.0.0.1',
     'user': 'root',
-    'password': 'root',
+    'password': '1q2w3e4r5t',
     'database':'proyecto_semi'
 }
 
