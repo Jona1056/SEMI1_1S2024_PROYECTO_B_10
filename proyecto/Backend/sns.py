@@ -45,13 +45,33 @@ def publish(titulo, descripcion):
         print("Error al publicar en suscripcion")
     return response
 
-def unsubscribe(subscriptionArn):
+def unsubscribe(subscriptionArn, usuario):
     try:
         response = sns.unsubscribe(
             SubscriptionArn=subscriptionArn
         )
+        print(subscriptionArn)
+        print("Usuario", usuario)
+        query("DELETE FROM Subscripcion s WHERE usuario  = %s", (usuario,))
         response["status"] = "ok"
-    except:
-        print("unsuscrito")
+    except Exception as e:
+        print(e)
         response["status"] = "no"
     return response
+
+def checksubscribe(user):
+    respuesta = {
+        "arn":"",
+        "isSub": False
+    }
+    try:
+        response = query("SELECT arn FROM Subscripcion s WHERE usuario  = %s", (user,))
+        respuesta = {
+            "arn":response[0][0][0],
+            "isSub": True
+        }
+            
+    except Exception as e:
+        # print(e)
+        response["status"] = "no"
+    return respuesta

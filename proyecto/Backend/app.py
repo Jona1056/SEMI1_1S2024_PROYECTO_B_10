@@ -8,7 +8,7 @@ from cognito import singUp
 from cognito import login_cognito
 from chatbot import conversa_bot
 from rekognition import detect_similitud, detect_faces,detect_text, newAlbumnstag
-from sns import subscribe, publish, unsubscribe
+from sns import subscribe, publish, unsubscribe, checksubscribe
 from io import BytesIO
 from PIL import Image
 import uuid
@@ -558,12 +558,25 @@ def snsPublish():
 
 @app.route('/snsUnsubscribe', methods=['POST'])
 def snsUnsubscribe():
+    
     subscriptionArn = request.json.get('subscriptionArn')
+    usuario = request.json.get('usuario')
     print("subscriptionArn", subscriptionArn)
+    print("Usuario", usuario)
     try:
-        response = unsubscribe(subscriptionArn)
+        response = unsubscribe(subscriptionArn,usuario)
     except:
         print("Error al desuscribir", subscriptionArn)
+    return response
+
+@app.route('/snsCheckSubs', methods=['POST'])
+def snsChecksubscribe():
+    usuario = request.json.get('usuario')
+    response = {}
+    try:
+        response = checksubscribe(usuario)
+    except:
+        print("Error al desuscribir", usuario)
     return response
 
 # ------------------------------- OTROS ----------------------------------------
