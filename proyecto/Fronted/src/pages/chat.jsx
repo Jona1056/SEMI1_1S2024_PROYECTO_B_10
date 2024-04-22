@@ -81,7 +81,7 @@ const Chat = () => {
           <button className="minimize-btn" onClick={toggleChat}>
             -
           </button>
-          <div className="titulo-chat">Chatbot Funadex</div>
+          <div className="titulo-chat">Chatbot Destinos Inteligentes</div>
         </div>
         <div className="chat-content">
           <div className="messages">
