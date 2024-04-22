@@ -23,7 +23,7 @@ export const LoginForm = () => {
       });
       if (response.status === 200) {
         const responseData = await response.json();
-        Swal.fire("Usuario autenticado", "Bienvenido a FaunaDex", "success");
+        Swal.fire("Usuario autenticado", "Bienvenido a Destinos Inteligentes", "success");
         const { message, user } = responseData;
         console.log(message); // Mensaje del servidor
         console.log(user)

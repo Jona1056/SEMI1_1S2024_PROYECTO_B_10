@@ -49,7 +49,7 @@ export const LoginForm_camara = () => {
 
             if (response.status === 200) {
                 const responseData = await response.data
-                Swal.fire("Usuario autenticado", "Bienvenido a FaunaDex", "success");
+                Swal.fire("Usuario autenticado", "Bienvenido a Destinos Inteligentes", "success");
                 const { mensaje, user } = responseData;
                 console.log(mensaje); // Mensaje del servidor
                 console.log(user)

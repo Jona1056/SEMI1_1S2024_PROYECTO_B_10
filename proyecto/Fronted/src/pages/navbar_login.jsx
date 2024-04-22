@@ -67,7 +67,7 @@ export const Navbar1 = () => {
       axios.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        Swal.fire("Se anuló correctamente la suscripcion", "No recibirás más correos de FaunaDex", "success");
+        Swal.fire("Se anuló correctamente la suscripcion", "No recibirás más correos de Destinos Inteligentes", "success");
         setIsSubscribed(false);
       })
       .catch((error) => {
@@ -93,7 +93,7 @@ export const Navbar1 = () => {
       axios.request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        Swal.fire("Suscripción exitosa", "Bienvenido a las noticias de FaunaDex, por favor confirma tu correo electrónico", "success");      
+        Swal.fire("Suscripción exitosa", "Bienvenido a las noticias de Destinos inteligentes, por favor confirma tu correo electrónico", "success");      
         setIsSubscribed(true);
         //fetchSubscriptionStatus();
 

@@ -83,7 +83,7 @@ export const Login_create = () => {
       });
     
       if (response.status === 200) {
-        Swal.fire("Usuario creado exitosamente", "Bienvenido a FaunaDex", "success");
+        Swal.fire("Usuario creado exitosamente", "Bienvenido a Destinos Inteligentes", "success");
         //borrar valores en los campos
         setUsername("");
         setName("");
