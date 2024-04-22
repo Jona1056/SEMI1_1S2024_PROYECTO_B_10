@@ -3,18 +3,13 @@ import os
 from dotenv import load_dotenv
 
 
-# db = {
-#     'host': os.environ.get('DB_HOST'),
-#     'user': os.environ.get('DB_USER'),
-#     'password': os.environ.get('DB_PASSWORD'),
-#     'database': os.environ.get('DB_DATABASE')
-# }
 db = {
-    'host': '127.0.0.1',
-    'user': 'root',
-    'password': '1q2w3e4r5t',
-    'database':'proyecto_semi'
+    'host': os.environ.get('DB_HOST'),
+     'user': os.environ.get('DB_USER'),
+    'password': os.environ.get('DB_PASSWORD'),
+    'database': os.environ.get('DB_DATABASE')
 }
+
 
 
 def query(query , parms):

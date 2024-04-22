@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from db import query, query2
 from encripty import hash_password
 from s3 import SubirS3 ,Tranlatetext
-from s3 import traerImagen
+from s3 import traerImagen, TextToVoz
 from cognito import singUp
 from cognito import login_cognito
 from chatbot import conversa_bot
@@ -92,7 +92,25 @@ def prueba_base():
 
 
     
+@app.route('/TextToVoz', methods=['POST'])
+def api_text_to_voz():
+    text = request.json.get('texto')
+    idioma = request.json.get('idioma')
 
+    traductor = ""
+    if idioma == 'en':
+        traductor = "Joanna"
+    elif idioma == 'zh':
+        traductor = "Zhiyu"
+    elif idioma == 'da':
+        traductor = "Vicki"
+    else:
+        traductor = "Lucia"
+
+    TextToVoz(traductor , text)
+
+    return send_file('speech.mp3', mimetype='audio/mpeg')
+   
     
 @app.route('/GetText', methods=['POST'])
 def api_get_text():
